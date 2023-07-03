@@ -1,0 +1,278 @@
+<?xml version='1.0' encoding='utf-8'?>
+
+<!DOCTYPE rfc>
+
+<?xml-stylesheet type='text/xsl' href='rfc2629.xslt' ?>
+<!-- used by XSLT processors -->
+<!-- For a complete list and description of processing instructions (PIs),
+     please see http://xml.resource.org/authoring/README.html. -->
+<!-- Below are generally applicable Processing Instructions (PIs) that most I-Ds might want to use.
+     (Here they are set differently than their defaults in xml2rfc v1.32) -->
+<?rfc strict="yes" ?>
+<!-- give errors regarding ID-nits and DTD validation -->
+<!-- control the table of contents (ToC) -->
+<?rfc toc="yes"?>
+<!-- generate a ToC -->
+<?rfc tocdepth="4"?>
+<!-- the number of levels of subsections in ToC. default: 3 -->
+<!-- control references -->
+<?rfc symrefs="yes"?>
+<!-- use symbolic references tags, i.e, [RFC2119] instead of [1] -->
+<?rfc sortrefs="yes" ?>
+<!-- sort the reference entries alphabetically -->
+<!-- control vertical white space
+     (using these PIs as follows is recommended by the RFC Editor) -->
+<?rfc compact="yes" ?>
+<!-- do not start each main section on a new page -->
+<?rfc subcompact="no" ?>
+<!-- keep one blank line between list items -->
+<!-- end of list of popular I-D processing instructions -->
+
+<rfc xmlns:xi="http://www.w3.org/2001/XInclude"
+        category="std" consensus="true"
+        docName="draft-huque-dnsop-multi-alg-rules-00"
+        ipr="trust200902"
+        updates="4035,6840"
+        obsoletes=""
+        submissionType="IETF" xml:lang="en"
+        tocInclude="true" tocDepth="4"
+        symRefs="true" sortRefs="true" version="3">
+
+  <!-- ***** FRONT MATTER ***** -->
+
+  <front>
+    <title abbrev="Multiple Algorithm Rules in DNSSEC">Multiple Algorithm Rules in DNSSEC</title>
+
+    <author fullname="Shumon Huque" initials="S." surname="Huque">
+      <organization>Salesforce</organization>
+      <address>
+        <postal>
+          <street>415 Mission Street, 3rd Floor</street>
+          <city>San Francisco</city>
+          <region>CA</region>
+          <code>94105</code>
+          <country>United States of America</country>
+        </postal>
+        <email>shuque@gmail.com</email>
+      </address>
+    </author>
+
+    <date day="30" month="6" year="2023"/>
+
+    <!-- Meta-data Declarations -->
+
+    <area>General</area>
+    <workgroup>Internet Engineering Task Force</workgroup>
+    <keyword>Internet-Draft</keyword>
+    <keyword>DNS</keyword>
+    <keyword>DNSSEC</keyword>
+    <keyword>Multiple</keyword>
+    <keyword>Algorithm</keyword>
+    <keyword>Rules</keyword>
+
+    <abstract>
+      <t>
+        This document proposes to address some inconsistencies and
+        limitations in the DNS protocol that pose challenges for
+        configurations of multi-signer operation and for the transfer
+        of signed DNS zones between providers, where the providers
+        support disjoint DNSSEC algorithm sets.
+      </t>
+    </abstract>
+  </front>
+
+  <middle>
+
+    <section title="Introduction and Motivation" anchor="intro">
+      <t>
+        RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH BEFORE
+        PUBLISHING: The source for this draft is maintained in GitHub
+        at: https://github.com/shuque/draft-dnsop-multi-alg-rules
+      </t>
+      <t>
+        The Domain Name System Security Extensions (DNSSEC)
+        <xref target="RFC4033" /> <xref target="RFC4034" />
+        <xref target="RFC4035" /> add data origin authentication
+        and integrity protection to the Domain Name System (DNS),
+        by having DNS zone owners (or their operators) crytographically
+        sign their zone data.
+      </t>
+      <t>
+        The <xref target="RFC8901">Multi-Signer Extensions</xref>
+        describe how multiple providers using distinct DNSSEC keys can
+        co-operatively serve the same DNS zone.
+        <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
+        describes how to fully automate Multi-Signer operations, as well
+        as how to use Model-2 of the Multi-Signer models to non-disruptively
+        transfer a signed zone from one provider to another. These methods
+        do not work however if the providers involved employ different
+        DNSSEC algorithms, due to restrictions imposed by the current
+        protocol specifications. This is not just a theoretical problem.
+        Real examples in the field have occurred where this has posed
+        an obstacle to DNSSEC deployment.
+      </t>
+    </section>
+
+    <section title="Current Multiple Algorithm Rules" anchor="multialg">
+      <t>
+        Section 2.2 (last paragraph) of <xref target="RFC4035" />
+        states the following:
+      </t>
+      <t>
+        "There MUST be an RRSIG for each RRset using at least one DNSKEY
+         of each algorithm in the zone apex DNSKEY RRset. The apex DNSKEY
+         RRset itself MUST be signed by each algorithm appearing in the DS
+         RRset located at the delegating parent (if any)."
+      </t>
+      <t>
+        Although unstated in that document, the original rationale for
+        this rule was algorithm downgrade protection. An attacker cannot
+        undetectably strip away signatures by a weaker algorithm from
+        signed DNS responses.
+      </t>
+      <t>
+        This rule cannot be satisfied if DNS providers deployed in a
+        multi-signer configuration are using different signing algorithms.
+        By extension, it also means that multi-signer techniques cannot
+        be employed to non-disruptively transfer a signed zone from one
+        DNS provider to another if the providers use differing algorithms.
+      </t>
+      <t>
+        For online signers attempting to deploy multiple algorithms,
+        this rule also imposes a significant computational burden,
+        unless a selective algorithm negotiation mechanism is also
+        developed.
+      </t>
+      <t>
+        On the other hand, Section 5.11 of
+        <xref target="RFC6840">DNSSEC Clarifications</xref> referring to
+        the above rule states that:
+      </t>
+      <t>
+        "This requirement applies to servers, not validators. Validators
+        SHOULD accept any single valid path. They SHOULD NOT insist that all
+        algorithms signaled in the DS RRset work, and they MUST NOT insist
+        that all algorithms signaled in the DNSKEY RRset work."
+      </t>
+      <t>
+        Effectively, this means that any validator following this rule
+        does not provide algorithm downgrade protection, rendering the
+        requirement in RFC 4035 somewhat meaningless. The two quoted
+        assertions in RFC 4035 and 6840 are thus arguably contradictory.
+      </t>
+    </section>
+
+    <section title="Does DNSSEC need algorithm downgrade protection?" anchor="downgrade">
+
+      <t>
+        All things being equal, algorithm downgrade protection would
+        be a desirable property. But in general, only the zone owner
+        knows the intent of their use of multiple algorithms. For example,
+        if a zone owner wants to deploy a multi-signer configuration
+        across two providers supporting the algorithms ECDSAP256SHA256
+        and RSASHA256-3072-bit respectively, it should be possible to
+        do so without unnecessary protocol impediments. Those algorithms
+        are roughly equivalent in strength and there is no threat of
+        downgrade attack.
+      </t>
+      <t>
+        More generally, a zone owner can avoid the threat of algorithm
+        downgrade by simply choosing to use a set of sufficiently strong
+        algorithms. Validators should not unilaterally impose requirements
+        that interfere with the zone owner's actual intentions. In fact,
+        the clarifying behavior of validators stated in RFC6840 which
+        states that they should accept "any" valid authenticatable path
+        is consistent with this stance.
+      </t>
+      <t>
+        The emerging threat of quantum computers may offer a more 
+        compelling rationale for algorithm downgrade protection.
+        A zone owner could double sign their zone with a classical
+        as well as a post-quantum algorithm, and want to make sure a
+        future break of the classical algorithm does not allow attackers
+        to strip away the post quantum signatures. A secure signaling
+        mechanism that permits a zone owner to advertise their intention
+        in this regard would be useful. Note that presently no post
+        quantum signature algorithms for DNSSEC have been standardized.
+      </t>
+    </section>
+
+    <section title="Proposed Updates to RFCs" anchor="updates">
+      <t>
+        Initial proposal: remove the quoted rule in RFC 4035.
+      </t>
+      <t>
+        Longer term: develop a scheme to allow a zone owner to
+        securely signal their desire for algorithm downgrade
+        protection. One possible method to do this is a "DS hack":
+        namely overloading the signed DS record set in the parent
+        zone to convey this signal, a technique that has been met
+        with some resistance by protocol purists in the past.
+        Another method would be to define a new resource record type
+        for this purpose. Special consideration would have to given
+        to where such a signal would be placed for the root zone if
+        needed. Details of such a proposal are deferred
+        to a future document (or a revision of this one).
+      </t>
+    </section>
+
+    <section title="IANA Considerations" anchor="IANA">
+      <t>
+        Initially none. If a later scheme for algorithm downgrade
+        signaling is developed, new protocol parameter numbers 
+        will be needed for DS or a new resource record type.
+      </t>
+    </section>
+
+    <section anchor="Security" title="Security Considerations">
+      <t>
+        TBD.
+       </t>
+    </section>
+
+    <section title="Acknowledgements" anchor="acks">
+      <t>
+        The proposal in this draft was originally presented in
+        <xref target="ICANN-TALK"/> at the ICANN73 DNSSEC and
+        Security workshop.
+      </t>
+    </section>
+
+  </middle>
+
+
+  <!--  *****BACK MATTER ***** -->
+
+  <back>
+
+    <references title="Normative References">
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4033.xml"/>
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4034.xml"/>
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4035.xml"/>
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6840.xml"/>
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8901.xml"/>
+    </references>
+
+    <references title="Informative References">
+      <reference anchor="DNSSEC-AUTO"
+                 target="https://www.ietf.org/archive/id/draft-ietf-dnsop-dnssec-automation-01.html">
+        <front>
+          <title>DNSSEC Automation</title>
+          <author fullname="Ulrich Wisser" initials="U" surname="Wisser" />
+          <author fullname="Shumon Huque" initials="S" surname="Huque" />
+          <date />
+        </front>
+      </reference>
+      <reference anchor="ICANN-TALK"
+                 target="https://tinyurl.com/multisigner-rfc-adjustments">
+        <front>
+          <title>RFC Adjustments for Multi-Signer</title>
+          <author fullname="Shumon Huque" initials="S" surname="Huque" />
+          <date />
+        </front>
+      </reference>
+    </references>
+
+  </back>
+
+</rfc>
