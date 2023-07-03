@@ -4,9 +4,9 @@
 
 Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
-Updates: 4035, 6840 (if approved)                           30 June 2023
+Updates: 4035, 6840 (if approved)                            3 July 2023
 Intended status: Standards Track                                        
-Expires: 1 January 2024
+Expires: 4 January 2024
 
 
                    Multiple Algorithm Rules in DNSSEC
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 1 January 2024.
+   This Internet-Draft will expire on 4 January 2024.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
 
 
 
-Huque                    Expires 1 January 2024                 [Page 1]
+Huque                    Expires 4 January 2024                 [Page 1]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 Table of Contents
@@ -90,7 +90,7 @@ Table of Contents
    from one provider to another.  These methods do not work however if
    the providers involved employ different DNSSEC algorithms, due to
    restrictions imposed by the current protocol specifications.  This is
-   not just a theoretical problem.  Real examples in the field have
+   not just a theoretical problem.  Real situations in the field have
    occurred where this has posed an obstacle to DNSSEC deployment.
 
 2.  Current Multiple Algorithm Rules
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Huque                    Expires 1 January 2024                 [Page 2]
+Huque                    Expires 4 January 2024                 [Page 2]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
    This rule cannot be satisfied if DNS providers deployed in a multi-
@@ -150,12 +150,12 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
    attack.
 
    More generally, a zone owner can avoid the threat of algorithm
-   downgrade by simply choosing to use a set of sufficiently strong
+   downgrade by simply choosing to use only a set of sufficiently strong
    algorithms.  Validators should not unilaterally impose requirements
    that interfere with the zone owner's actual intentions.  In fact, the
-   clarifying behavior of validators stated in RFC6840 which states that
-   they should accept "any" valid authenticatable path is consistent
-   with this stance.
+   clarifying behavior of validators in RFC6840 which states that they
+   should accept "any" valid authentication path is consistent with this
+   stance.
 
    The emerging threat of quantum computers may offer a more compelling
    rationale for algorithm downgrade protection.  A zone owner could
@@ -165,9 +165,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
 
 
 
-Huque                    Expires 1 January 2024                 [Page 3]
+Huque                    Expires 4 January 2024                 [Page 3]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
    signatures.  A secure signaling mechanism that permits a zone owner
@@ -188,7 +188,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
    purpose.  Special consideration would have to given to where such a
    signal would be placed for the root zone if needed.  Details of such
    a proposal are deferred to a future document (or a revision of this
-   one).
+   one).  If and when such a proposal is developed, the text in RFC
+   6840, Section 5.11 will need to be updated to enforce algorithm
+   downgrade protection in the presence of the signal.
 
 5.  IANA Considerations
 
@@ -219,11 +221,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
 
 
 
-
-
-Huque                    Expires 1 January 2024                 [Page 4]
+Huque                    Expires 4 January 2024                 [Page 4]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          June 2023
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
@@ -277,4 +277,4 @@ Author's Address
 
 
 
-Huque                    Expires 1 January 2024                 [Page 5]
+Huque                    Expires 4 January 2024                 [Page 5]

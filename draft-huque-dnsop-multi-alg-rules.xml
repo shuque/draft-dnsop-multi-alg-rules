@@ -57,7 +57,7 @@
       </address>
     </author>
 
-    <date day="30" month="6" year="2023"/>
+    <date day="3" month="7" year="2023"/>
 
     <!-- Meta-data Declarations -->
 
@@ -108,7 +108,7 @@
         do not work however if the providers involved employ different
         DNSSEC algorithms, due to restrictions imposed by the current
         protocol specifications. This is not just a theoretical problem.
-        Real examples in the field have occurred where this has posed
+        Real situations in the field have occurred where this has posed
         an obstacle to DNSSEC deployment.
       </t>
     </section>
@@ -177,12 +177,12 @@
       </t>
       <t>
         More generally, a zone owner can avoid the threat of algorithm
-        downgrade by simply choosing to use a set of sufficiently strong
-        algorithms. Validators should not unilaterally impose requirements
-        that interfere with the zone owner's actual intentions. In fact,
-        the clarifying behavior of validators stated in RFC6840 which
-        states that they should accept "any" valid authenticatable path
-        is consistent with this stance.
+        downgrade by simply choosing to use only a set of sufficiently
+        strong algorithms. Validators should not unilaterally impose
+        requirements that interfere with the zone owner's actual
+        intentions. In fact, the clarifying behavior of validators in
+        RFC6840 which states that they should accept "any" valid
+        authentication path is consistent with this stance.
       </t>
       <t>
         The emerging threat of quantum computers may offer a more 
@@ -212,7 +212,10 @@
         for this purpose. Special consideration would have to given
         to where such a signal would be placed for the root zone if
         needed. Details of such a proposal are deferred
-        to a future document (or a revision of this one).
+        to a future document (or a revision of this one). If and
+        when such a proposal is developed, the text in RFC 6840,
+        Section 5.11 will need to be updated to enforce algorithm
+        downgrade protection in the presence of the signal.
       </t>
     </section>
 
