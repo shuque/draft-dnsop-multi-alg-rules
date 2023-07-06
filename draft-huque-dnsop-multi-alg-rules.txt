@@ -14,11 +14,10 @@ Expires: 4 January 2024
 
 Abstract
 
-   This document proposes to address some inconsistencies and
-   limitations in the DNS protocol that pose challenges for
-   configurations of multi-signer operation and for the transfer of
-   signed DNS zones between providers, where the providers support
-   disjoint DNSSEC algorithm sets.
+   This document proposes to address some limitations in the DNS
+   protocol that pose challenges for configurations of multi-signer
+   operation and for the transfer of signed DNS zones between providers,
+   where the providers support disjoint DNSSEC algorithm sets.
 
 Status of This Memo
 
@@ -53,6 +52,7 @@ Copyright Notice
 
 
 
+
 Huque                    Expires 4 January 2024                 [Page 1]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
@@ -62,14 +62,15 @@ Table of Contents
 
    1.  Introduction and Motivation . . . . . . . . . . . . . . . . .   2
    2.  Current Multiple Algorithm Rules  . . . . . . . . . . . . . .   2
-   3.  Does DNSSEC need algorithm downgrade protection?  . . . . . .   3
-   4.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   4
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   4
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   4
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   4
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .   4
-   9.  Informative References  . . . . . . . . . . . . . . . . . . .   5
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   5
+   3.  Support for a wide range of validators  . . . . . . . . . . .   3
+   4.  Does DNSSEC need algorithm downgrade protection?  . . . . . .   4
+   5.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   4
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   5
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
+   10. Informative References  . . . . . . . . . . . . . . . . . . .   6
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction and Motivation
 
@@ -85,13 +86,14 @@ Table of Contents
    The Multi-Signer Extensions [RFC8901] describe how multiple providers
    using distinct DNSSEC keys can co-operatively serve the same DNS
    zone.  DNSSEC Automation [DNSSEC-AUTO] further describes how to fully
-   automate Multi-Signer operations, as well as how to use Model-2 of
-   the Multi-Signer models to non-disruptively transfer a signed zone
-   from one provider to another.  These methods do not work however if
-   the providers involved employ different DNSSEC algorithms, due to
-   restrictions imposed by the current protocol specifications.  This is
-   not just a theoretical problem.  Real situations in the field have
-   occurred where this has posed an obstacle to DNSSEC deployment.
+   automate Multi-Signer operations, as well as how to use a
+   transitional state of a multi-signer configuration to non-
+   disruptively transfer a signed zone from one provider to another.
+   These methods do not work however if the providers involved employ
+   different DNSSEC algorithms, due to restrictions imposed by the
+   current protocol specifications.  This is not just a theoretical
+   problem.  Real situations in the field have occurred where this has
+   posed an obstacle to DNSSEC deployment and operations.
 
 2.  Current Multiple Algorithm Rules
 
@@ -102,10 +104,8 @@ Table of Contents
    itself MUST be signed by each algorithm appearing in the DS RRset
    located at the delegating parent (if any)."
 
-   Although unstated in that document, the original rationale for this
-   rule was algorithm downgrade protection.  An attacker cannot
-   undetectably strip away signatures by a weaker algorithm from signed
-   DNS responses.
+
+
 
 
 
@@ -113,6 +113,11 @@ Huque                    Expires 4 January 2024                 [Page 2]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
+
+   Although unstated in that document, the original rationale for this
+   rule was algorithm downgrade protection.  An attacker cannot
+   undetectably strip away signatures by a stronger algorithm from
+   signed DNS responses.
 
    This rule cannot be satisfied if DNS providers deployed in a multi-
    signer configuration are using different signing algorithms.  By
@@ -137,31 +142,26 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    in RFC 4035 somewhat meaningless.  The two quoted assertions in RFC
    4035 and 6840 are thus arguably contradictory.
 
-3.  Does DNSSEC need algorithm downgrade protection?
+3.  Support for a wide range of validators
 
-   All things being equal, algorithm downgrade protection would be a
-   desirable property.  But in general, only the zone owner knows the
-   intent of their use of multiple algorithms.  For example, if a zone
-   owner wants to deploy a multi-signer configuration across two
-   providers supporting the algorithms ECDSAP256SHA256 and
-   RSASHA256-3072-bit respectively, it should be possible to do so
-   without unnecessary protocol impediments.  Those algorithms are
-   roughly equivalent in strength and there is no threat of downgrade
-   attack.
+   A secondary reason for the rule in RFC 4035 is that it allows signed
+   data in the zone to be authenticatable by a wide range of validating
+   resolvers that may support different algorithms.  This is sound
+   advice as a general rule, and allows a zone operator to introduce a
+   newish algorithm that does not yet have wide support in the field by
+   double signing it with a well known algorithm.  But the rule is too
+   rigid to support other reasonable configurations where differing
+   algorithms may be in use, but all of which are very widely supported.
+   Multi-signer and inter-provider transfers involving differing but
+   only well known algorithms are cases in point.
 
-   More generally, a zone owner can avoid the threat of algorithm
-   downgrade by simply choosing to use only a set of sufficiently strong
-   algorithms.  Validators should not unilaterally impose requirements
-   that interfere with the zone owner's actual intentions.  In fact, the
-   clarifying behavior of validators in RFC6840 which states that they
-   should accept "any" valid authentication path is consistent with this
-   stance.
 
-   The emerging threat of quantum computers may offer a more compelling
-   rationale for algorithm downgrade protection.  A zone owner could
-   double sign their zone with a classical as well as a post-quantum
-   algorithm, and want to make sure a future break of the classical
-   algorithm does not allow attackers to strip away the post quantum
+
+
+
+
+
+
 
 
 
@@ -170,14 +170,61 @@ Huque                    Expires 4 January 2024                 [Page 3]
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
+4.  Does DNSSEC need algorithm downgrade protection?
+
+   All things being equal, algorithm downgrade protection would be a
+   desirable property.  But in general, only the zone owner knows the
+   intent of their use of multiple algorithms.  For example, if a zone
+   owner wants to deploy a multi-signer configuration across two
+   providers supporting the algorithms ECDSAP256SHA256 and
+   RSASHA256-3072-bit respectively, it should be possible to do so
+   without unnecessary protocol impediments.  Those algorithms are
+   roughly comparable in strength and there is no threat of downgrade
+   attack.
+
+   More generally, a zone owner can avoid the threat of algorithm
+   downgrade by simply choosing to use only a set of sufficiently strong
+   algorithms.  Validators should not unilaterally impose requirements
+   that interfere with the zone owner's actual intentions.  In fact, the
+   clarifying behavior of validators in RFC6840 which states that they
+   should accept "any" valid authentication path is compatible with this
+   stance.
+
+   The emerging threat of quantum computers may offer a more compelling
+   rationale for algorithm downgrade protection.  A zone owner could
+   double sign their zone with a classical as well as a post-quantum
+   algorithm, and want to make sure a future break of the classical
+   algorithm does not allow attackers to strip away the post quantum
    signatures.  A secure signaling mechanism that permits a zone owner
    to advertise their intention in this regard would be useful.  Note
    that presently no post quantum signature algorithms for DNSSEC have
    been standardized.
 
-4.  Proposed Updates to RFCs
+5.  Proposed Updates to RFCs
 
-   Initial proposal: remove the quoted rule in RFC 4035.
+   Initial proposal: relax the quoted rule in RFC 4035.  Change the MUST
+   to a SHOULD, and state that there are valid configurations where this
+   rule could be disregarded.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Huque                    Expires 4 January 2024                 [Page 4]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
 
    Longer term: develop a scheme to allow a zone owner to securely
    signal their desire for algorithm downgrade protection.  One possible
@@ -186,28 +233,29 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    has been met with some resistance by protocol purists in the past.
    Another method would be to define a new resource record type for this
    purpose.  Special consideration would have to given to where such a
-   signal would be placed for the root zone if needed.  Details of such
-   a proposal are deferred to a future document (or a revision of this
+   signal would be placed for the root zone if needed (or whether the
+   root zone should just have a hardcoded rule).  Details of such a
+   proposal are deferred to a future document (or a revision of this
    one).  If and when such a proposal is developed, the text in RFC
    6840, Section 5.11 will need to be updated to enforce algorithm
    downgrade protection in the presence of the signal.
 
-5.  IANA Considerations
+6.  IANA Considerations
 
    Initially none.  If a later scheme for algorithm downgrade signaling
    is developed, new protocol parameter numbers will be needed for DS or
    a new resource record type.
 
-6.  Security Considerations
+7.  Security Considerations
 
    TBD.
 
-7.  Acknowledgements
+8.  Acknowledgements
 
    The proposal in this draft was originally presented in [ICANN-TALK]
-   at the ICANN73 DNSSEC and Security workshop.
+   by S.  Huque at the ICANN73 DNSSEC and Security workshop.
 
-8.  Normative References
+9.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
@@ -219,17 +267,20 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
 
-
-
-Huque                    Expires 4 January 2024                 [Page 4]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
+
+
+
+
+
+
+Huque                    Expires 4 January 2024                 [Page 5]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
 
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
               Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
@@ -241,7 +292,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               DOI 10.17487/RFC8901, September 2020,
               <https://www.rfc-editor.org/info/rfc8901>.
 
-9.  Informative References
+10.  Informative References
 
    [DNSSEC-AUTO]
               Wisser, U. and S. Huque, "DNSSEC Automation",
@@ -277,4 +328,9 @@ Author's Address
 
 
 
-Huque                    Expires 4 January 2024                 [Page 5]
+
+
+
+
+
+Huque                    Expires 4 January 2024                 [Page 6]

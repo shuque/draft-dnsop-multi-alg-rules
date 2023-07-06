@@ -72,11 +72,10 @@
 
     <abstract>
       <t>
-        This document proposes to address some inconsistencies and
-        limitations in the DNS protocol that pose challenges for
-        configurations of multi-signer operation and for the transfer
-        of signed DNS zones between providers, where the providers
-        support disjoint DNSSEC algorithm sets.
+        This document proposes to address some limitations in the DNS
+        protocol that pose challenges for configurations of multi-signer
+        operation and for the transfer of signed DNS zones between providers,
+        where the providers support disjoint DNSSEC algorithm sets.
       </t>
     </abstract>
   </front>
@@ -103,13 +102,14 @@
         co-operatively serve the same DNS zone.
         <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
         describes how to fully automate Multi-Signer operations, as well
-        as how to use Model-2 of the Multi-Signer models to non-disruptively
-        transfer a signed zone from one provider to another. These methods
-        do not work however if the providers involved employ different
-        DNSSEC algorithms, due to restrictions imposed by the current
-        protocol specifications. This is not just a theoretical problem.
-        Real situations in the field have occurred where this has posed
-        an obstacle to DNSSEC deployment.
+        as how to use a transitional state of a multi-signer configuration
+        to non-disruptively transfer a signed zone from one provider to
+        another. These methods do not work however if the providers
+        involved employ different DNSSEC algorithms, due to restrictions
+        imposed by the current protocol specifications. This is not just
+        a theoretical problem. Real situations in the field have occurred
+        where this has posed an obstacle to DNSSEC deployment and
+        operations.
       </t>
     </section>
 
@@ -127,7 +127,7 @@
       <t>
         Although unstated in that document, the original rationale for
         this rule was algorithm downgrade protection. An attacker cannot
-        undetectably strip away signatures by a weaker algorithm from
+        undetectably strip away signatures by a stronger algorithm from
         signed DNS responses.
       </t>
       <t>
@@ -162,6 +162,24 @@
       </t>
     </section>
 
+    <section title="Support for a wide range of validators">
+
+      <t>
+        A secondary reason for the rule in RFC 4035 is that it
+        allows signed data in the zone to be authenticatable by
+        a wide range of validating resolvers that may support
+        different algorithms. This is sound advice as a general
+        rule, and allows a zone operator to introduce a newish
+        algorithm that does not yet have wide support in the field
+        by double signing it with a well known algorithm. But the
+        rule is too rigid to support other reasonable configurations
+        where differing algorithms may be in use, but all of which
+        are very widely supported. Multi-signer and inter-provider
+        transfers involving differing but only well known algorithms
+        are cases in point.
+      </t>
+    </section>
+
     <section title="Does DNSSEC need algorithm downgrade protection?" anchor="downgrade">
 
       <t>
@@ -172,7 +190,7 @@
         across two providers supporting the algorithms ECDSAP256SHA256
         and RSASHA256-3072-bit respectively, it should be possible to
         do so without unnecessary protocol impediments. Those algorithms
-        are roughly equivalent in strength and there is no threat of
+        are roughly comparable in strength and there is no threat of
         downgrade attack.
       </t>
       <t>
@@ -182,7 +200,7 @@
         requirements that interfere with the zone owner's actual
         intentions. In fact, the clarifying behavior of validators in
         RFC6840 which states that they should accept "any" valid
-        authentication path is consistent with this stance.
+        authentication path is compatible with this stance.
       </t>
       <t>
         The emerging threat of quantum computers may offer a more 
@@ -199,7 +217,9 @@
 
     <section title="Proposed Updates to RFCs" anchor="updates">
       <t>
-        Initial proposal: remove the quoted rule in RFC 4035.
+        Initial proposal: relax the quoted rule in RFC 4035.
+        Change the MUST to a SHOULD, and state that there are
+        valid configurations where this rule could be disregarded.
       </t>
       <t>
         Longer term: develop a scheme to allow a zone owner to
@@ -211,11 +231,12 @@
         Another method would be to define a new resource record type
         for this purpose. Special consideration would have to given
         to where such a signal would be placed for the root zone if
-        needed. Details of such a proposal are deferred
-        to a future document (or a revision of this one). If and
-        when such a proposal is developed, the text in RFC 6840,
-        Section 5.11 will need to be updated to enforce algorithm
-        downgrade protection in the presence of the signal.
+        needed (or whether the root zone should just have a hardcoded
+        rule). Details of such a proposal are deferred to a future
+        document (or a revision of this one). If and when such a
+        proposal is developed, the text in RFC 6840, Section 5.11 will
+        need to be updated to enforce algorithm downgrade protection
+        in the presence of the signal.
       </t>
     </section>
 
@@ -236,8 +257,8 @@
     <section title="Acknowledgements" anchor="acks">
       <t>
         The proposal in this draft was originally presented in
-        <xref target="ICANN-TALK"/> at the ICANN73 DNSSEC and
-        Security workshop.
+        <xref target="ICANN-TALK"/> by S. Huque at the ICANN73 DNSSEC
+        and Security workshop.
       </t>
     </section>
 
