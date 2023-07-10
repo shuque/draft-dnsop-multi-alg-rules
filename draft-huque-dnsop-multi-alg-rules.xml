@@ -57,7 +57,18 @@
       </address>
     </author>
 
-    <date day="3" month="7" year="2023"/>
+    <author fullname="Peter Thomassen" initials="P." surname="Thomassen">
+      <organization>deSEC, SSE</organization>
+      <address>
+        <postal>
+          <city>Berlin</city>
+          <country>Germany</country>
+        </postal>
+        <email>peter@desec.io</email>
+      </address>
+    </author>
+
+    <date day="10" month="7" year="2023"/>
 
     <!-- Meta-data Declarations -->
 

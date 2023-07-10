@@ -4,9 +4,9 @@
 
 Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
-Updates: 4035, 6840 (if approved)                            3 July 2023
-Intended status: Standards Track                                        
-Expires: 4 January 2024
+Updates: 4035, 6840 (if approved)                           P. Thomassen
+Intended status: Standards Track                              deSEC, SSE
+Expires: 11 January 2024                                    10 July 2023
 
 
                    Multiple Algorithm Rules in DNSSEC
@@ -34,7 +34,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 January 2024.
+   This Internet-Draft will expire on 11 January 2024.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Huque                    Expires 4 January 2024                 [Page 1]
+Huque & Thomassen        Expires 11 January 2024                [Page 1]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -70,7 +70,7 @@ Table of Contents
    8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   5
    9.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
    10. Informative References  . . . . . . . . . . . . . . . . . . .   6
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .   6
 
 1.  Introduction and Motivation
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Huque                    Expires 4 January 2024                 [Page 2]
+Huque & Thomassen        Expires 11 January 2024                [Page 2]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -165,7 +165,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque                    Expires 4 January 2024                 [Page 3]
+Huque & Thomassen        Expires 11 January 2024                [Page 3]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -221,7 +221,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque                    Expires 4 January 2024                 [Page 4]
+Huque & Thomassen        Expires 11 January 2024                [Page 4]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -277,7 +277,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque                    Expires 4 January 2024                 [Page 5]
+Huque & Thomassen        Expires 11 January 2024                [Page 5]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -303,7 +303,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               Huque, S., "RFC Adjustments for Multi-Signer",
               <https://tinyurl.com/multisigner-rfc-adjustments>.
 
-Author's Address
+Authors' Addresses
 
    Shumon Huque
    Salesforce
@@ -313,6 +313,11 @@ Author's Address
    Email: shuque@gmail.com
 
 
+   Peter Thomassen
+   deSEC, SSE
+   Berlin
+   Germany
+   Email: peter@desec.io
 
 
 
@@ -328,9 +333,4 @@ Author's Address
 
 
 
-
-
-
-
-
-Huque                    Expires 4 January 2024                 [Page 6]
+Huque & Thomassen        Expires 11 January 2024                [Page 6]
