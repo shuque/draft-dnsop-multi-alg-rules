@@ -87,9 +87,11 @@
     <abstract>
       <t>
         This document proposes to relax some restrictions in the DNS
-        protocol that pose challenges for configurations of multi-signer
-        operation and for the transfer of signed DNS zones between providers,
-        where the providers support disjoint DNSSEC algorithm sets.
+        protocol that pose challenges when a zone uses more than one DNSSEC algorithm.
+        This includes configurations of multi-signer
+        operation, the transfer of signed DNS zones between providers,
+        where the providers support disjoint algorithm sets, and algorithm rollovers.
+	<!-- above will need to be reworded for clarity -->
       </t>
     </abstract>
   </front>
@@ -111,6 +113,17 @@
         sign their zone data.
       </t>
       <t>
+        For zones that have deployed DNSSEC, the normal mode of operation is to utilize a single
+        algorithm.  However, there are some situations where multiple algorithms may be in use:
+      </t>
+      <ul>
+        <li>When a zone is served by multiple providers that sign the zone separately.</li>
+        <li>When a zone is transferred between providers that support disjoint algorithm sets.</li>
+        <li>During an algorithm rollover.</li>
+      </ul>
+      
+      <section title="Multi-Signer">
+      <t>
         The <xref target="RFC8901">Multi-Signer Models</xref>
         describe how multiple providers using distinct DNSSEC keys can
         co-operatively serve the same DNS zone.
@@ -125,6 +138,24 @@
         where this has posed an obstacle to DNSSEC deployment and
         operations.
       </t>
+      </section>
+      <section title="Algorithm Rollovers">
+        <t>
+          A signed DNS zone may transition from one DNSSEC algorithm to
+          another, a process colloquially known as an algorithm rollover
+          <xref target="RFC6781"/>.  Generally speaking, an algorithm
+          rollover works as follows: initially the zone is signed with one
+          "old" algorithm.  Then, a new algorithm is added to the zone.
+          For some amount of time both old and new algorithms are present
+          and in use.  Finally, the old algorithm is removed and the
+          zone now has just the new algorithm.
+        </t>
+        <t>
+          Section 4.1.4 of <xref target="RFC6781"/> describes both a
+          "conservative" and a "liberal" approach to algorithm rollovers,
+          which directly relates to this document.
+        </t>
+      </section>
     </section>
 
     <section title="Current Multiple Algorithm Rules" anchor="multialg">
@@ -292,6 +323,7 @@
     </references>
 
     <references title="Informative References">
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6781.xml"/>
       <reference anchor="DNSSEC-AUTO"
                  target="https://www.ietf.org/archive/id/draft-ietf-dnsop-dnssec-automation-01.html">
         <front>
