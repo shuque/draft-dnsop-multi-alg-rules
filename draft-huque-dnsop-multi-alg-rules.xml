@@ -57,6 +57,20 @@
       </address>
     </author>
 
+    <author fullname="Duane Wessels" initials="D." surname="Wessels">
+      <organization>Verisign</organization>
+      <address>
+        <postal>
+          <street>12061 Bluemont Way</street>
+          <city>Reston</city>
+          <region>VA</region>
+          <code>20190</code>
+          <country>US</country>
+        </postal>
+        <email>dwessels@verisign.com</email>
+      </address>
+    </author>
+
     <date day="3" month="7" year="2023"/>
 
     <!-- Meta-data Declarations -->
