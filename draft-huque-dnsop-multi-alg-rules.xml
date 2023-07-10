@@ -154,75 +154,98 @@
         Section 2.2 (last paragraph) of <xref target="RFC4035" />
         states the following:
       </t>
-      <t>
-        "There MUST be an RRSIG for each RRset using at least one DNSKEY
-         of each algorithm in the zone apex DNSKEY RRset. The apex DNSKEY
-         RRset itself MUST be signed by each algorithm appearing in the DS
-         RRset located at the delegating parent (if any)."
-      </t>
+      <blockquote>
+        There MUST be an RRSIG for each RRset using at least one DNSKEY
+        of each algorithm in the zone apex DNSKEY RRset. The apex DNSKEY
+        RRset itself MUST be signed by each algorithm appearing in the DS
+        RRset located at the delegating parent (if any).
+      </blockquote>
       <t>
          Further, Section 5.11 of <xref target="RFC6840" /> clarifies:
       </t>
-      <t>
-        "A signed zone MUST include a DNSKEY for each algorithm present in
-        the zone's DS RRset and expected trust anchors for the zone."
+      <blockquote>
+        A signed zone MUST include a DNSKEY for each algorithm present in
+        the zone's DS RRset and expected trust anchors for the zone.
+      </blockquote>
+      <section title="Discussion">
+        <t>
+          Although unstated in that document, the original rationale for
+          this rule was algorithm downgrade protection. An attacker cannot
+          undetectably strip away signatures by a stronger algorithm from
+          signed DNS responses. Section 5.11 of
+          <xref target="RFC6840">DNSSEC Clarifications</xref>, referring to
+          the above rule, thus states that:
+        </t>
+        <blockquote>
+          This requirement applies to servers, not validators. Validators
+          SHOULD accept any single valid path. They SHOULD NOT insist that all
+          algorithms signaled in the DS RRset work, and they MUST NOT insist
+          that all algorithms signaled in the DNSKEY RRset work.
+        </blockquote>
+        <t>
+          In general, when a validating resolver supporting any of the
+          algorithms listed in a given zone's DS record or TA set responds to a
+          query without the CD flag set, it may not treat that zone as insecure,
+          but must return either validated data (AD=1) or RCODE=2 (SERVFAIL).
+          For this purpose, any valid path suffices; the validator may not apply
+          a "logical AND" approach to all advertised algorithms.
+        </t>
+        <t>
+        At first glance, the assertions that (1) the signer provide signatures
+        for all advertised algorithms while (2) the resolver shall be content
+        with just one seems somewhat contradictory. However, the role of the
+        RRSIG rules is to ensure that the resolver will find a valid path (using
+        a "logical OR" strategy), regardless of which particular algorithm(s) it
+        supports, and thus be able to distinguish reliably between "all is in
+        order" (validated data) and a downgrade attack (SERVFAIL).
       </t>
       <t>
-        This rule is impractical to satisfy if DNS providers deployed in a
-        multi-signer configuration are using different signing algorithms.
-        By extension, it also means that multi-signer techniques cannot
-        be employed to non-disruptively transfer a signed zone from one
-        DNS provider to another if the providers use differing algorithms.
+        In other words, even though one signature will suffice for validation,
+        the signer cannot, in the general case, know which particular signing
+        algorithm(s) the validator will support -- and hence, providing a "large
+        enough set" (read: all of them) solves that problem.
       </t>
-      <t>
-        The rule further collides with the conflicting goal of pre-publishing
-        the new trust anchor during a zone's algorithm rollover, while
-        introducing the new algorithm into the zone only later in the process.
-      </t>
-      <t>
-        Furthermore, for online signers attempting to deploy multiple
-        algorithms, this rule also imposes a significant computational burden,
-        unless a selective algorithm negotiation mechanism is also
-        developed.
-      </t>
-      <t>
-        Although unstated in that document, the original rationale for
-        this rule was algorithm downgrade protection. An attacker cannot
-        undetectably strip away signatures by a stronger algorithm from
-        signed DNS responses. Section 5.11 of
-        <xref target="RFC6840">DNSSEC Clarifications</xref>, referring to
-        the above rule, thus states that:
-      </t>
-      <t>
-        "This requirement applies to servers, not validators. Validators
-        SHOULD accept any single valid path. They SHOULD NOT insist that all
-        algorithms signaled in the DS RRset work, and they MUST NOT insist
-        that all algorithms signaled in the DNSKEY RRset work."
-      </t>
-      <t>
-        Effectively, this means that any validator following this rule
-        does not provide algorithm downgrade protection, rendering the
-        requirement in RFC 4035 somewhat meaningless. The two quoted
-        assertions in RFC 4035 and 6840 are thus arguably contradictory.
-      </t>
-    </section>
-
-    <section title="Support for a wide range of validators">
-
-      <t>
-        A secondary reason for the rule in RFC 4035 is that it
-        allows signed data in the zone to be authenticatable by
-        a wide range of validating resolvers that may support
-        different algorithms. This is sound advice as a general
-        rule, and allows a zone operator to introduce a newish
-        algorithm that does not yet have wide support in the field
-        by double signing it with a well known algorithm. But the
-        rule is too rigid to support other reasonable configurations
-        where differing algorithms may be in use, but all of which
-        are very widely supported. Multi-signer and inter-provider
-        transfers involving differing but only well known algorithms
-        are cases in point.
-      </t>
+      </section>
+      <section title="Incompatible Use Cases">
+        <t>
+          The above rules are incompatible with certain use cases:
+        </t>
+        <ul>
+          <li>
+            <t>
+              They are impractical to satisfy if DNS providers deployed in
+              a multi-signer configuration are using different signing
+              algorithms. By extension, it also means that multi-signer
+              techniques cannot be employed to non-disruptively transfer a
+              signed zone from one DNS provider to another if the providers use
+              differing algorithms.
+            </t>
+          </li>
+          <li>
+            <t>
+              The rules further collide with the conflicting goal of
+              pre-publishing the new trust anchor during a zone's algorithm
+              rollover, while introducing the new algorithm into the zone only
+              later in the process.
+            </t>
+          </li>
+          <li>
+            <t>
+              Furthermore, for online signers attempting to deploy multiple
+              algorithms, producing signatures for several algorithms also
+              imposes a significant computational burden, unless a selective
+              algorithm negotiation mechanism is also developed.
+            </t>
+          </li>
+        </ul>
+        <t>
+          As the above rules present a severe limitation for these use cases,
+          this document proposes to relax them in a way so that the set of
+          signatures provided is still "large enough" to ensure reliable DNSSEC
+          operation, while facilitating glitch-free multi-signer operation and
+          TA pre-publication.
+        </t>
+      </section>
     </section>
 
     <section title="Does DNSSEC need algorithm downgrade protection?" anchor="downgrade">
