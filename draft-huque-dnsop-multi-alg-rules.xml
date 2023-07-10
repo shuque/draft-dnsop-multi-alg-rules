@@ -248,41 +248,6 @@
       </section>
     </section>
 
-    <section title="Does DNSSEC need algorithm downgrade protection?" anchor="downgrade">
-
-      <t>
-        All things being equal, algorithm downgrade protection would
-        be a desirable property. But in general, only the zone owner
-        knows the intent of their use of multiple algorithms. For example,
-        if a zone owner wants to deploy a multi-signer configuration
-        across two providers supporting the algorithms ECDSAP256SHA256
-        and RSASHA256-3072-bit respectively, it should be possible to
-        do so without unnecessary protocol impediments. Those algorithms
-        are roughly comparable in strength and there is no threat of
-        downgrade attack.
-      </t>
-      <t>
-        More generally, a zone owner can avoid the threat of algorithm
-        downgrade by simply choosing to use only a set of sufficiently
-        strong algorithms. Validators should not unilaterally impose
-        requirements that interfere with the zone owner's actual
-        intentions. In fact, the clarifying behavior of validators in
-        RFC6840 which states that they should accept "any" valid
-        authentication path is compatible with this stance.
-      </t>
-      <t>
-        The emerging threat of quantum computers may offer a more 
-        compelling rationale for algorithm downgrade protection.
-        A zone owner could double sign their zone with a classical
-        as well as a post-quantum algorithm, and want to make sure a
-        future break of the classical algorithm does not allow attackers
-        to strip away the post quantum signatures. A secure signaling
-        mechanism that permits a zone owner to advertise their intention
-        in this regard would be useful. Note that presently no post
-        quantum signature algorithms for DNSSEC have been standardized.
-      </t>
-    </section>
-
     <section title="Proposed Updates to RFCs" anchor="updates">
       <t>
         Initial proposal: relax the quoted rule in RFC 4035.
