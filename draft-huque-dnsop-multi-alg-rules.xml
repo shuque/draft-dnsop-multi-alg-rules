@@ -84,9 +84,15 @@
     <abstract>
       <t>
         This document proposes to address some limitations in the DNS
-        protocol that pose challenges for configurations of multi-signer
+        protocol that pose challenges for DNSSEC configurations that
+        advertise multiple Secure Entry Points (SEP) with different
+        signing algorithms via their DS record or trust anchor set.
+        Solutions to these limitations will allow for both multi-signer
         operation and for the transfer of signed DNS zones between providers,
         where the providers support disjoint DNSSEC algorithm sets.
+        In addition, the proposal enables pre-publication of a trust
+        anchor in preparation for an algorithm rollover, such as of the
+        root zone.
       </t>
     </abstract>
   </front>
@@ -122,6 +128,25 @@
         where this has posed an obstacle to DNSSEC deployment and
         operations.
       </t>
+      <t>
+        The same restrictions limit flexiblity during algorithm rollovers for
+        zones with trust anchors. To ensure that a validation is available, the
+        old key and associated signatures cannot be removed until virtually all
+        validating resolvers have updated their trust anchor (TA). In order to
+        allow resolver operators to perform this update, the new trust anchor
+        has to be published ahead of time.
+      </t>
+      <t>
+        <xref target="RFC6840">Current specifications</xref> imply that when a
+        trust anchor for a new algorithm is published, the associated DNSKEY and
+        RRSIGs already need to be in place. When rolling the algorithm for the
+        root zone, this could lead to a potentialy very long phase of
+        double-signing the zone, on the order of a year. To reduce potential
+        risks from unintended side effects (such as from overly large packets)
+        during such a rollover, it seems desirable to create a way publishing
+        the new trust anchor without introducing the new algorithm into the zone
+        yet.
+      </t>
     </section>
 
     <section title="Current Multiple Algorithm Rules" anchor="multialg">
@@ -136,28 +161,37 @@
          RRset located at the delegating parent (if any)."
       </t>
       <t>
-        Although unstated in that document, the original rationale for
-        this rule was algorithm downgrade protection. An attacker cannot
-        undetectably strip away signatures by a stronger algorithm from
-        signed DNS responses.
+         Further, Section 5.11 of <xref target="RFC6840" /> clarifies:
       </t>
       <t>
-        This rule cannot be satisfied if DNS providers deployed in a
+        "A signed zone MUST include a DNSKEY for each algorithm present in
+        the zone's DS RRset and expected trust anchors for the zone."
+      </t>
+      <t>
+        This rule is impractical to satisfy if DNS providers deployed in a
         multi-signer configuration are using different signing algorithms.
         By extension, it also means that multi-signer techniques cannot
         be employed to non-disruptively transfer a signed zone from one
         DNS provider to another if the providers use differing algorithms.
       </t>
       <t>
-        For online signers attempting to deploy multiple algorithms,
-        this rule also imposes a significant computational burden,
+        The rule further collides with the conflicting goal of pre-publishing
+        the new trust anchor during a zone's algorithm rollover, while
+        introducing the new algorithm into the zone only later in the process.
+      </t>
+      <t>
+        Furthermore, for online signers attempting to deploy multiple
+        algorithms, this rule also imposes a significant computational burden,
         unless a selective algorithm negotiation mechanism is also
         developed.
       </t>
       <t>
-        On the other hand, Section 5.11 of
-        <xref target="RFC6840">DNSSEC Clarifications</xref> referring to
-        the above rule states that:
+        Although unstated in that document, the original rationale for
+        this rule was algorithm downgrade protection. An attacker cannot
+        undetectably strip away signatures by a stronger algorithm from
+        signed DNS responses. Section 5.11 of
+        <xref target="RFC6840">DNSSEC Clarifications</xref>, referring to
+        the above rule, thus states that:
       </t>
       <t>
         "This requirement applies to servers, not validators. Validators
