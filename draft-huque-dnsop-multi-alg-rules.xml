@@ -111,7 +111,7 @@
         sign their zone data.
       </t>
       <t>
-        The <xref target="RFC8901">Multi-Signer Extensions</xref>
+        The <xref target="RFC8901">Multi-Signer Models</xref>
         describe how multiple providers using distinct DNSSEC keys can
         co-operatively serve the same DNS zone.
         <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
