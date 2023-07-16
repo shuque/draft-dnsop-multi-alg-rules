@@ -4,9 +4,11 @@
 
 Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
-Updates: 4035, 6840 (if approved)                            3 July 2023
-Intended status: Standards Track                                        
-Expires: 4 January 2024
+Updates: 4035, 6840, 8624 (if approved)                     P. Thomassen
+Intended status: Standards Track                              deSEC, SSE
+Expires: 15 January 2024                                     V. Dukhovni
+                                                              Google LLC
+                                                            14 July 2023
 
 
                    Multiple Algorithm Rules in DNSSEC
@@ -14,10 +16,18 @@ Expires: 4 January 2024
 
 Abstract
 
-   This document proposes to address some limitations in the DNS
-   protocol that pose challenges for configurations of multi-signer
-   operation and for the transfer of signed DNS zones between providers,
-   where the providers support disjoint DNSSEC algorithm sets.
+   This document restates the requirements on DNSSEC signing and
+   validation and makes small adjustments in order to allow for more
+   flexible handling of configurations that advertise multiple Secure
+   Entry Points (SEP) with different signing algorithms via their DS
+   record or trust anchor set.  The adjusted rules allow both for multi-
+   signer operation and for the transfer of signed DNS zones between
+   providers, where the providers support disjoint DNSSEC algorithm
+   sets.  In addition, the proposal enables pre-publication of a trust
+   anchor in preparation for an algorithm rollover, such as of the root
+   zone.
+
+   This document updates RFCs 4035, 6840, and 8624.
 
 Status of This Memo
 
@@ -34,12 +44,19 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 4 January 2024.
+   This Internet-Draft will expire on 15 January 2024.
 
 Copyright Notice
 
    Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
+
+
+
+Huque, et al.            Expires 15 January 2024                [Page 1]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -50,27 +67,30 @@ Copyright Notice
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
 
-
-
-
-Huque                    Expires 4 January 2024                 [Page 1]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
 Table of Contents
 
    1.  Introduction and Motivation . . . . . . . . . . . . . . . . .   2
-   2.  Current Multiple Algorithm Rules  . . . . . . . . . . . . . .   2
-   3.  Support for a wide range of validators  . . . . . . . . . . .   3
-   4.  Does DNSSEC need algorithm downgrade protection?  . . . . . .   4
-   5.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   4
-   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   5
-   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   5
-   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   5
-   9.  Normative References  . . . . . . . . . . . . . . . . . . . .   5
-   10. Informative References  . . . . . . . . . . . . . . . . . . .   6
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .   6
+   2.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   4
+     2.1.  Liberal Approach  . . . . . . . . . . . . . . . . . . . .   4
+     2.2.  Moderate Approach . . . . . . . . . . . . . . . . . . . .   5
+       2.2.1.  Updates to RFC 8624 . . . . . . . . . . . . . . . . .   5
+       2.2.2.  Signing Requirements  . . . . . . . . . . . . . . . .   5
+       2.2.3.  Validator Requirements  . . . . . . . . . . . . . . .   6
+       2.2.4.  Discussion  . . . . . . . . . . . . . . . . . . . . .   6
+   3.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+     4.1.  Liberal approach  . . . . . . . . . . . . . . . . . . . .   7
+     4.2.  Moderate approach . . . . . . . . . . . . . . . . . . . .   8
+       4.2.1.  Algorithm Transitions . . . . . . . . . . . . . . . .   8
+       4.2.2.  Time Dependency of UNIVERSAL Algorithms . . . . . . .   8
+   5.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
+   7.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   Appendix A.  Current Multiple Algorithm Rules . . . . . . . . . .  10
+     A.1.  Signing Requirements  . . . . . . . . . . . . . . . . . .  10
+     A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  11
+     A.3.  Incompatible Use Cases  . . . . . . . . . . . . . . . . .  11
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
 
 1.  Introduction and Motivation
 
@@ -83,179 +103,376 @@ Table of Contents
    protection to the Domain Name System (DNS), by having DNS zone owners
    (or their operators) crytographically sign their zone data.
 
-   The Multi-Signer Extensions [RFC8901] describe how multiple providers
-   using distinct DNSSEC keys can co-operatively serve the same DNS
-   zone.  DNSSEC Automation [DNSSEC-AUTO] further describes how to fully
-   automate Multi-Signer operations, as well as how to use a
-   transitional state of a multi-signer configuration to non-
-   disruptively transfer a signed zone from one provider to another.
-   These methods do not work however if the providers involved employ
-   different DNSSEC algorithms, due to restrictions imposed by the
-   current protocol specifications.  This is not just a theoretical
-   problem.  Real situations in the field have occurred where this has
-   posed an obstacle to DNSSEC deployment and operations.
-
-2.  Current Multiple Algorithm Rules
-
-   Section 2.2 (last paragraph) of [RFC4035] states the following:
-
-   "There MUST be an RRSIG for each RRset using at least one DNSKEY of
-   each algorithm in the zone apex DNSKEY RRset.  The apex DNSKEY RRset
-   itself MUST be signed by each algorithm appearing in the DS RRset
-   located at the delegating parent (if any)."
 
 
 
 
 
 
-Huque                    Expires 4 January 2024                 [Page 2]
+Huque, et al.            Expires 15 January 2024                [Page 2]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
-   Although unstated in that document, the original rationale for this
-   rule was algorithm downgrade protection.  An attacker cannot
-   undetectably strip away signatures by a stronger algorithm from
-   signed DNS responses.
+   Current specifications [RFC4035][RFC6840] require that a zone be
+   signed with each signing algorithm listed in a zone's DS RRset or
+   appearing via its trust anchors.  This poses a problem for (at least)
+   the following cases:
 
-   This rule cannot be satisfied if DNS providers deployed in a multi-
-   signer configuration are using different signing algorithms.  By
-   extension, it also means that multi-signer techniques cannot be
-   employed to non-disruptively transfer a signed zone from one DNS
-   provider to another if the providers use differing algorithms.
+   *  In multi-signer setups (Multi-Signer Extensions [RFC8901]
+      Section 2.1.2), multiple providers using distinct DNSSEC keys can
+      co-operatively serve the same DNS zone.  This methods does not
+      work however if the providers involved employ different DNSSEC
+      algorithms.
 
-   For online signers attempting to deploy multiple algorithms, this
-   rule also imposes a significant computational burden, unless a
-   selective algorithm negotiation mechanism is also developed.
+   *  DNSSEC Automation [DNSSEC-AUTO] further describes how to fully
+      automate Multi-Signer operations, including how to use a
+      transitional state of a multi-signer configuration to non-
+      disruptively transfer a signed zone from one provider to another.
+      If the old and the new provider do not use the same signing
+      algorithms, identical problems appear.
 
-   On the other hand, Section 5.11 of DNSSEC Clarifications [RFC6840]
-   referring to the above rule states that:
+   *  When performing an algorithm rollover for a zone with a trust
+      anchor, current specifications mandate that the zone has to be
+      double-signed with both the old and the new algorithm before
+      publishing the new trust anchor.  For the root zone, this could
+      lead to a potentially rather long phase of double-signing (on the
+      order of a year).  As this comes with both financial and
+      operational risks, it seems desirable to find a way for publishing
+      the new trust anchor without introducing the new algorithm into
+      the zone just yet.
 
-   "This requirement applies to servers, not validators.  Validators
-   SHOULD accept any single valid path.  They SHOULD NOT insist that all
-   algorithms signaled in the DS RRset work, and they MUST NOT insist
-   that all algorithms signaled in the DNSKEY RRset work."
+   *  Furthermore, for online signers attempting to deploy multiple
+      algorithms, producing signatures for several algorithms imposes a
+      significant computational burden.
 
-   Effectively, this means that any validator following this rule does
-   not provide algorithm downgrade protection, rendering the requirement
-   in RFC 4035 somewhat meaningless.  The two quoted assertions in RFC
-   4035 and 6840 are thus arguably contradictory.
+   The above issues are not just a theoretical problem.  Real situations
+   in the field have occurred where these restrictions have posed an
+   obstacle to DNSSEC deployment and operations.
 
-3.  Support for a wide range of validators
-
-   A secondary reason for the rule in RFC 4035 is that it allows signed
-   data in the zone to be authenticatable by a wide range of validating
-   resolvers that may support different algorithms.  This is sound
-   advice as a general rule, and allows a zone operator to introduce a
-   newish algorithm that does not yet have wide support in the field by
-   double signing it with a well known algorithm.  But the rule is too
-   rigid to support other reasonable configurations where differing
-   algorithms may be in use, but all of which are very widely supported.
-   Multi-signer and inter-provider transfers involving differing but
-   only well known algorithms are cases in point.
-
-
-
-
-
-
-
+   On the other hand, the existing signing requirements that give rise
+   to the above limitations are well motivated: When a zone's DS RRset
+   or trust anchor set includes multiple DNSKEY algorithms, an attacker
+   who can strip all the supported RRSIGs from a signed response from
+   that zone, leaving just the unsupported signatures, must not be able
+   to disable validation for that zone, effectively downgrading the zone
+   to "insecure".  The rules therefore ensure the downgrade resistance
+   of DNSSEC when only some, but not all, of a zone's DS RRset or trust
+   anchor set DNSKEY algorithms are supported by a validating resolver.
 
 
 
 
-Huque                    Expires 4 January 2024                 [Page 3]
+
+
+Huque, et al.            Expires 15 January 2024                [Page 3]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
-4.  Does DNSSEC need algorithm downgrade protection?
+   It turns out that the current requirements (in this very strict form)
+   are not necessary to achieve this goal.  This document thus explores
+   how the signing and validation rules can be modified to accommodate
+   additional use cases, without compromising on the security guarantees
+   given by DNSSEC.
 
-   All things being equal, algorithm downgrade protection would be a
-   desirable property.  But in general, only the zone owner knows the
-   intent of their use of multiple algorithms.  For example, if a zone
-   owner wants to deploy a multi-signer configuration across two
-   providers supporting the algorithms ECDSAP256SHA256 and
-   RSASHA256-3072-bit respectively, it should be possible to do so
-   without unnecessary protocol impediments.  Those algorithms are
-   roughly comparable in strength and there is no threat of downgrade
-   attack.
+2.  Proposed Updates to RFCs
 
-   More generally, a zone owner can avoid the threat of algorithm
-   downgrade by simply choosing to use only a set of sufficiently strong
-   algorithms.  Validators should not unilaterally impose requirements
-   that interfere with the zone owner's actual intentions.  In fact, the
-   clarifying behavior of validators in RFC6840 which states that they
-   should accept "any" valid authentication path is compatible with this
-   stance.
+   The heart of the issue is that even though any one acceptable
+   signature suffices for validation, the signer cannot, in the general
+   case, know which particular signing algorithm(s) the validator will
+   support -- and hence, providing a "large enough set" (read: all of
+   them) is the approach that had been taken so far.
 
-   The emerging threat of quantum computers may offer a more compelling
-   rationale for algorithm downgrade protection.  A zone owner could
-   double sign their zone with a classical as well as a post-quantum
-   algorithm, and want to make sure a future break of the classical
-   algorithm does not allow attackers to strip away the post quantum
-   signatures.  A secure signaling mechanism that permits a zone owner
-   to advertise their intention in this regard would be useful.  Note
-   that presently no post quantum signature algorithms for DNSSEC have
-   been standardized.
+   This is set down in Section 2.2 of [RFC4035]:
 
-5.  Proposed Updates to RFCs
+   |  There MUST be an RRSIG for each RRset using at least one DNSKEY of
+   |  each algorithm in the zone apex DNSKEY RRset.  The apex DNSKEY
+   |  RRset itself MUST be signed by each algorithm appearing in the DS
+   |  RRset located at the delegating parent (if any).
 
-   Initial proposal: relax the quoted rule in RFC 4035.  Change the MUST
-   to a SHOULD, and state that there are valid configurations where this
-   rule could be disregarded.
+   In the following, two different ways of amending this existing
+   specification are described.
 
+2.1.  Liberal Approach
 
+   The most straightforward proposal is to relax the rule quoted from
+   RFC 4035 by changing the MUST to a SHOULD, and state that there are
+   valid configurations where this rule could be disregarded.
 
+   This approach requires zone owners / signers to exercise great
+   caution when selecting the set of algorithms for which RRSIGs are
+   served or not served.  In particular, when using an algorithm that is
+   not universally supported among the resolver population (such as
+   algorithm 7) together with a supported one (such as algorithm 13),
+   resolvers may return SERVFAIL under certain circumstances.
 
-
-
-
-
-
-
-
-
-
+   More explicitly, a zone that is using some algorithm as its sole
+   signing algorithm is (correctly) treated as insecure by resolvers
+   that do not support that algorithm.  When attempting to transfer the
+   domain to another DNS provider through a multi-signer setup with a
+   supported algorithm, affected resolvers will return SERVFAIL when
+   presented with the unsupported signature only.  Zone owners and
+   signers thus must take great care to not leave a validating resolver
+   without a valid supported path when transitioning e.g. from algorithm
+   7 to 13.
 
 
 
-Huque                    Expires 4 January 2024                 [Page 4]
+
+
+Huque, et al.            Expires 15 January 2024                [Page 4]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
-   Longer term: develop a scheme to allow a zone owner to securely
-   signal their desire for algorithm downgrade protection.  One possible
-   method to do this is a "DS hack": namely overloading the signed DS
-   record set in the parent zone to convey this signal, a technique that
-   has been met with some resistance by protocol purists in the past.
-   Another method would be to define a new resource record type for this
-   purpose.  Special consideration would have to given to where such a
-   signal would be placed for the root zone if needed (or whether the
-   root zone should just have a hardcoded rule).  Details of such a
-   proposal are deferred to a future document (or a revision of this
-   one).  If and when such a proposal is developed, the text in RFC
-   6840, Section 5.11 will need to be updated to enforce algorithm
-   downgrade protection in the presence of the signal.
+2.2.  Moderate Approach
 
-6.  IANA Considerations
+   This approach establishes a mechanism allowing the signer to
+   determine which RRSIGs can be skipped, without risking validation
+   failures.  It does not require all algorithms' RRSIGs to be present,
+   while ensuring that the set of signatures provided is still "large
+   enough" for reliable DNSSEC operation, so that glitch-free multi-
+   signer operation and TA pre-publication are made possible, without
+   risking validation failures.
 
-   Initially none.  If a later scheme for algorithm downgrade signaling
-   is developed, new protocol parameter numbers will be needed for DS or
-   a new resource record type.
+   For the case of a multi-signer setup with two generally supported
+   algorithms (such as 8 and 13), the scheme requires only one of the
+   two signatures.  Similarly, when pre-publishing a trust anchor,
+   associated signatures don't need to be published immediately,
+   provided that the existing TA's algorithm is generally supported.
 
-7.  Security Considerations
+2.2.1.  Updates to RFC 8624
 
-   TBD.
+   The notion of UNIVERSAL signing algorithms is introduced, and defined
+   as follows:
 
-8.  Acknowledgements
+   *  The information contained in the table of [RFC8624] Section 3.1 is
+      transferred into a to-be-erected IANA registry, and a boolean
+      column is added with the heading "universal validation support".
+      Signing algorithms where this column is TRUE are called
+      "UNIVERSAL".
 
-   The proposal in this draft was originally presented in [ICANN-TALK]
-   by S.  Huque at the ICANN73 DNSSEC and Security workshop.
+   *  "MUST NOT sign" algorithms can never be UNIVERSAL.  "MUST
+      validate" is a prerequisite for UNIVERSAL.  Changes that affect
+      whether an algorithm is UNIVERSAL require standards action.
 
-9.  Normative References
+   *  Algorithms 8 and 13 are the only algorithms currently declared
+      UNIVERSAL.
+
+   Also, new terminology is established for algorithms in "MUST NOT
+   sign" status: those are called "INSECURE".
+
+   As soon as a "MUST validate" algorithm is known or expected to have
+   declining validation support, it should be moved to status "MUST NOT
+   sign" (which removes the UNIVERSAL label if present, and renders the
+   algorithm INSECURE).  Accordingly, algorithms 5 and 7 are declared
+   "MUST NOT sign".
+
+   The following algorithms are thus INSECURE: 1, 3, 5, 6, 7, 12
+
+2.2.2.  Signing Requirements
+
+
+
+
+
+Huque, et al.            Expires 15 January 2024                [Page 5]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   1.  Signers must sign with at least one UNIVERSAL algorithm if at
+       least one UNIVERSAL algorithm is present in the DS RRset or trust
+       anchor set.  Other signatures are OPTIONAL.
+
+   2.  Absent any UNIVERSAL algorithms in the DS RRset or trust anchor
+       set, signers MUST sign with all algorithms listed.
+
+2.2.3.  Validator Requirements
+
+   1.  When the DS RRset or trust anchor set for a zone includes an
+       unsupported INSECURE algorithm, validators MUST treat the zone as
+       unsigned, even if the DS RRset or trust anchor set lists another
+       supported algorithm.
+
+   2.  Otherwise, validators MUST accept any valid path.
+
+   Implementing these rules requires validating resolvers to keep a
+   record of INSECURE algorithms (e.g. via a static array of INSECURE
+   algorithm numbers), so that the zone's security status can be
+   established upon inspection of a DS record or TA set.  Any otherwise
+   supported algorithms that are disabled by the resolver operator as a
+   matter of local policy MUST also be considered "INSECURE".
+
+2.2.4.  Discussion
+
+   It is observed that both signers and validators need to know only one
+   of the concepts "UNIVERSAL" and "INSECURE": to use several signing
+   algorithms, signers only need to know which algorithms are UNIVERSAL,
+   while validators only need to know which are INSECURE.  This limits
+   the implementation effort.
+
+   The new validation requirements enable stable multi-signer setups
+   using UNIVERSAL algorithms as well as glitch-free provider transfers
+   and algorithm upgrades from INSECURE to UNIVERSAL algorithms (such as
+   algorithm 7 to 13), without risking SERVFAIL responses in the event
+   that a resolver no longer supports one of the algorithms (e.g. 7).
+   For a detailed discussion, see Security Considerations (Section 4.2).
+
+   DNS operators in a multi-signer setup are free to limit their
+   responses to serve signatures for one UNIVERSAL algorithm only.  This
+   one signature is sufficient to provide a valid path everywhere.
+
+   When a UNIVERSAL algorithm is in use, signatures of other algorithms
+   are not required.  DNS providers are thus free to introduce
+   additional (non-INSECURE) algorithms without coercing other
+   participating providers into doing the same.
+
+
+
+
+
+Huque, et al.            Expires 15 January 2024                [Page 6]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   For zones with trust anchors, when there is a trust anchor with a
+   UNIVERSAL algorithm, it is permissible to introduce a new trust
+   anchor for a different algorithm before introducing the corresponding
+   DNSKEY and RRSIGs into the zone.  (Of course, they need to be added
+   before the old trust anchor is removed.)
+
+   If the added trust anchor is also for a UNIVERSAL algorithm, it is
+   permissible to eventually switch to returning just the RRSIGs for the
+   new algorithm, without an intermediate dual-signing period.  If the
+   new trust anchor is not yet UNIVERSAL, a dual signing period is
+   required in order to complete the algorithm rollover.
+
+   In typical cases, particularly in the case of the root zone, both
+   algorithms will be UNIVERSAL.  In a hypothetical emergency situation
+   where only the new algorithm is UNIVERSAL and the old was just
+   downgraded to INSECURE, the new signatures would need to be
+   introduced immediately.  A short dual signing period would then be
+   required for continuity.  Resolvers would be expected to defer
+   disabling the old algorithm until after the root zone rollover is
+   completed.
+
+3.  IANA Considerations
+
+   The liberal approach (Section 2.1) has no IANA actions.
+
+   When the moderate approach (Section 2.2) is taken, this section will
+   need to be updated to describe the construction of the new IANA
+   registry for the implementation status and requirements of DNSSEC
+   signing algorithms.
+
+4.  Security Considerations
+
+4.1.  Liberal approach
+
+   The liberal approach requires the zone owner and signer(s) to take
+   great care in order to not break working setups by entering a multi-
+   signer setup.  In particular, when transferring a zone to another DNS
+   provider and switching from e.g. algorithm 7 to 13 in the process,
+   resolvers that do no longer support algorithm 7 will expect a valid
+   path for algorithm 13.  If the response only contains an RRSIG for
+   algorithm 7, the result will be SERVFAIL.
+
+   The liberal approach is thus only workable in cases where the multi-
+   signer setup involves universally supported algorithms exclusively.
+   As the set of universally supported algorithms evolves over time,
+   zone owners and signers need to monitor developments and upgrade
+   algorithms before validation support for the involved algorithms is
+   declining and SERVFAIL looms.
+
+
+
+Huque, et al.            Expires 15 January 2024                [Page 7]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+4.2.  Moderate approach
+
+4.2.1.  Algorithm Transitions
+
+   The new validation requirements guarantee that when a zone is in a
+   multi-signer setup with two algorithms, the security level is the
+   same as it would be if the zone was in a single-signer setup using
+   the weakest of them (from the resolver's perspective).  This resolves
+   undue SERVFAIL issues that could occur with certain algorithm
+   combinations under the previous rules.
+
+   For example, a zone using only algorithm 7 is treated as insecure by
+   resolvers that do not support this algorithm.  (This is as before.)
+   When transferring the domain to another provider via a multi-signer
+   setup with algorithm 13, however, the zone's security status will now
+   remain "insecure", as the DS RRset still includes INSECURE algorithm
+   7.  The presence of algorithm 13 is inconsequential at this point.
+   Only once algorithm 7 is removed, the zone turns secure.
+
+   This rule prevents validation breakage when the resolver encounters
+   an unsupported RRSIG from an outdated algorithm, and instead
+   acknowledges the fact that the signer is using an algorithm that is
+   in "MUST NOT sign" status, which (depending on resolver support)
+   might render the zone insecure.  This allows for glitch-free
+   algorithm upgrades, with the security status of the zone changing
+   only once the transition is complete.
+
+   Resolvers supporting both algorithms retain full validation
+   throughtout the transition.  In case of a permanent multi-signer
+   setup, the zone maintainer needs to upgrade the INSECURE algorithm to
+   a UNIVERSAL one in order to restore universal validation.
+
+4.2.2.  Time Dependency of UNIVERSAL Algorithms
+
+   The same situation occurs when an algorithm is removed from the set
+   of UNIVERSAL algorithms.  In this case, the algorithm will enter
+   "MUST NOT sign" status and become INSECURE.  If the zone continues to
+   use the INSECURE algorithm, it will continue to fully validate with
+   supporting resolvers, while non-supporting resolvers will treat the
+   zone as insecure until the algorithm is replaced.
+
+   Conversely, when an algorithm is added to the set of UNIVERSAL ones,
+   signers MAY begin to return signatures for just that algorithm.  This
+   is, in fact, not a problem, as resolvers do not need to know the
+   concept of UNIVERSAL; they just need to support that algorithm (or,
+   typically, explicitly classify it as INSECURE).  A problem could only
+   occur if the corresponding RRSIG was not supported by a non-
+   negligible population of resolvers; however, in that case labeling
+
+
+
+Huque, et al.            Expires 15 January 2024                [Page 8]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   the algorithm as UNIVERSAL would have been premature.  Determining
+   universal support cannot be solved on the protocol level, and it is
+   the community's responsibility to only advance an algorithm to
+   UNIVERSAL when safe enough, i.e. when the population of resolvers
+   lacking support is deemed negligible.
+
+   Resolvers dropping support for INSECURE algorithms (e.g. 7) without
+   implementing this specification will produce SERVFAIL responses for
+   multi-signer setups involving the disabled algorithm.  Implementation
+   of the new validation rules is thus advised as soon as support for an
+   algorithm is dropped.
+
+5.  Acknowledgements
+
+   The liberal proposal in this draft was originally presented in
+   [ICANN-TALK] by S.  Huque at the ICANN73 DNSSEC and Security
+   workshop.
+
+   The moderate approach was originally proposed by P.  Thomassen and V.
+   Dukhovni after discussions on the problem space with Edward Lewis,
+   Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve Crocker.
+
+6.  Normative References
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
@@ -272,27 +489,29 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
 
-
-
-
-
-
-Huque                    Expires 4 January 2024                 [Page 5]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
               Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
               DOI 10.17487/RFC6840, February 2013,
               <https://www.rfc-editor.org/info/rfc6840>.
+
+   [RFC8624]  Wouters, P. and O. Sury, "Algorithm Implementation
+              Requirements and Usage Guidance for DNSSEC", RFC 8624,
+              DOI 10.17487/RFC8624, June 2019,
+              <https://www.rfc-editor.org/info/rfc8624>.
+
+
+
+Huque, et al.            Expires 15 January 2024                [Page 9]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
 
    [RFC8901]  Huque, S., Aras, P., Dickinson, J., Vcelak, J., and D.
               Blacka, "Multi-Signer DNSSEC Models", RFC 8901,
               DOI 10.17487/RFC8901, September 2020,
               <https://www.rfc-editor.org/info/rfc8901>.
 
-10.  Informative References
+7.  Informative References
 
    [DNSSEC-AUTO]
               Wisser, U. and S. Huque, "DNSSEC Automation",
@@ -303,7 +522,124 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               Huque, S., "RFC Adjustments for Multi-Signer",
               <https://tinyurl.com/multisigner-rfc-adjustments>.
 
-Author's Address
+Appendix A.  Current Multiple Algorithm Rules
+
+   This section discusses the multi-algorithm requirements on signers
+   and validators, as specified by the original DNSSEC specification and
+   in effect until updated by this document.  It is included for purely
+   informational purposes and context.
+
+A.1.  Signing Requirements
+
+   In addition to the last paragraph of [RFC4035] Section 2.2 quoted
+   earlier, Section 5.11 of [RFC6840] clarifies:
+
+   |  A signed zone MUST include a DNSKEY for each algorithm present in
+   |  the zone's DS RRset and expected trust anchors for the zone.
+
+   While it might seem tempting, relaxing this rule without any further
+   adjustments may not be safe depending on the algorithm combination
+   involved.  In particular, when using an algorithm that is not
+   universally supported among the resolver population (such as
+   algorithm 7) together with a supported one (such as algorithm 13),
+   resolvers may return SERVFAIL under certain circumstances.  Zone
+   owners and signers thus would have to take great care to not leave a
+   validating resolver without a valid supported path in such
+   situations, e.g. when transitioning from algorithm 7 to 13.
+
+
+
+
+
+
+
+
+
+
+
+Huque, et al.            Expires 15 January 2024               [Page 10]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   More explicitly, when the sole signing algorithm used by a zone is
+   not supported by a given resolver, the resolver will (correctly)
+   treat that zone as unsigned.  However, when attempting to transfer
+   the domain to another DNS provider through a multi-signer setup with
+   a supported algorithm, affected resolvers presented with the
+   unsupported signature only will not be able to distinguish this
+   situation from a downgrade-to-insecure attack where the second
+   signature has been stripped, and will return SERVFAIL.
+
+   Although unstated in that document, the above rule prevents this kind
+   of downgrade-to-insecure attack by requiring RRSIGs for all
+   advertised algorithms; a validator can thus assume that something is
+   wrong when supported signatures are missing.  As a side effect, the
+   rule also protects against downgrade-to-weaker attacks, so that an
+   attacker cannot undetectably strip away signatures by a stronger
+   algorithm from signed DNS responses.  This property is not a core
+   guarantee of DNSSEC (see below).
+
+A.2.  Validator Requirements
+
+   In general, when a validating resolver supporting any of the
+   algorithms listed in a given zone's DS record or TA set responds to a
+   query without the CD flag set, it may not treat that zone as
+   insecure, but must return either validated data (AD=1) or RCODE=2
+   (SERVFAIL).  For this purpose, any valid path suffices; the validator
+   may not apply a "logical AND" approach to all advertised algorithms.
+
+   Accordingly, Section 5.11 of DNSSEC Clarifications [RFC6840] states:
+
+   |  This requirement applies to servers, not validators.  Validators
+   |  SHOULD accept any single valid path.  They SHOULD NOT insist that
+   |  all algorithms signaled in the DS RRset work, and they MUST NOT
+   |  insist that all algorithms signaled in the DNSKEY RRset work.
+
+   At first glance, the assertions that (1) the signer provide
+   signatures for all advertised algorithms while (2) the resolver shall
+   be content with just one seems somewhat contradictory.  However, the
+   role of the RRSIG rules is to ensure that the resolver will find a
+   valid path (using a "logical OR" strategy), regardless of which
+   particular algorithm(s) it supports, and thus be able to distinguish
+   reliably between "all is in order" (validated data) and a downgrade-
+   to-insecure attack (SERVFAIL).
+
+A.3.  Incompatible Use Cases
+
+   The above rules are incompatible with certain use cases:
+
+
+
+
+
+Huque, et al.            Expires 15 January 2024               [Page 11]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   *  They are impractical to satisfy if DNS providers deployed in a
+      multi-signer configuration are using different signing algorithms.
+      By extension, it also means that multi-signer techniques cannot be
+      employed to non-disruptively transfer a signed zone from one DNS
+      provider to another if the providers use differing algorithms.
+
+   *  The rules further collide with the conflicting goal of pre-
+      publishing the new trust anchor during a zone's algorithm
+      rollover, while introducing the new algorithm into the zone only
+      later in the process.
+
+   *  Furthermore, for online signers attempting to deploy multiple
+      algorithms, producing signatures for several algorithms also
+      imposes a significant computational burden, unless a selective
+      algorithm negotiation mechanism is also developed.
+
+   As the above rules present a severe limitation for these use cases,
+   this document proposes to relax them in a way so that the set of
+   signatures provided is still "large enough" to ensure reliable DNSSEC
+   operation, while facilitating the above use cases.
+
+Authors' Addresses
 
    Shumon Huque
    Salesforce
@@ -313,6 +649,16 @@ Author's Address
    Email: shuque@gmail.com
 
 
+   Peter Thomassen
+   deSEC, SSE
+   Berlin
+   Germany
+   Email: peter@desec.io
+
+
+   Viktor Dukhovni
+   Google LLC
+   Email: ietf-dane@dukhovni.org
 
 
 
@@ -323,14 +669,4 @@ Author's Address
 
 
 
-
-
-
-
-
-
-
-
-
-
-Huque                    Expires 4 January 2024                 [Page 6]
+Huque, et al.            Expires 15 January 2024               [Page 12]
