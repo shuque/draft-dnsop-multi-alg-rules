@@ -196,8 +196,8 @@
       <t>
         The heart of the issue is that even though any one acceptable signature
         suffices for validation, the signer cannot, in the general case,
-        know which particular signing algorithm(s) the validator will support
-        &mdash; and hence, providing a "large enough set" (read: all of them) is the
+        know which particular signing algorithm(s) the validator will support;
+        and hence, providing a "large enough set" (read: all of them) is the
         approach that had been taken so far.
       </t>
       <t>
