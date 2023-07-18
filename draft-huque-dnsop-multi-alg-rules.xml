@@ -259,11 +259,6 @@
           signatures don't need to be published immediately, provided that the
           existing TA's algorithm is generally supported.
         </t>
-        <t>
-          Since algorithm 8 supports variable key sizes, multi-signer
-          configurations involving 8 and 13 should take care to employ
-          an RSA keylength that is computationally infeasible to attack.
-        </t>
         <section title="Updates to RFC 8624">
           <t>
             The notion of UNIVERSAL signing algorithms is introduced, and
@@ -507,6 +502,13 @@
           algorithm is dropped.
         </t>
         </section>
+      </section>
+      <section title="Variable Key Size Algorithms">
+        <t>
+          Since algorithm 8 supports variable key sizes, multi-signer
+          configurations involving 8 and 13 should take care to employ
+          an RSA keylength that is computationally infeasible to attack.
+        </t>
       </section>
     </section>
 
