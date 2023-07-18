@@ -120,13 +120,14 @@
         <li>When a zone is served by multiple providers that sign the zone separately.</li>
         <li>When a zone is transferred between providers that support disjoint algorithm sets.</li>
         <li>During an algorithm rollover.</li>
+        <li>During a transition to post-quantum cryptographic algorithms.</li>
       </ul>
       
       <section title="Multi-Signer">
       <t>
         The <xref target="RFC8901">Multi-Signer Models</xref>
         describe how multiple providers using distinct DNSSEC keys can
-        co-operatively serve the same DNS zone.
+        cooperatively serve the same DNS zone.
         <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
         describes how to fully automate Multi-Signer operations, as well
         as how to use a transitional state of a multi-signer configuration
@@ -143,10 +144,10 @@
         <t>
           A signed DNS zone may transition from one DNSSEC algorithm to
           another, a process colloquially known as an algorithm rollover
-          <xref target="RFC6781"/>.  Generally speaking, an algorithm
+          <xref target="RFC6781"/>.  An algorithm
           rollover works as follows: initially the zone is signed with one
           "old" algorithm.  Then, a new algorithm is added to the zone.
-          For some amount of time both old and new algorithms are present
+          For some amount of time both the old and new algorithms are present
           and in use.  Finally, the old algorithm is removed and the
           zone now has just the new algorithm.
         </t>
@@ -211,16 +212,16 @@
 
       <t>
         A secondary reason for the rule in RFC 4035 is that it
-        allows signed data in the zone to be authenticatable by
+        allows signed data in the zone to be authenticated by
         a wide range of validating resolvers that may support
         different algorithms. This is sound advice as a general
-        rule, and allows a zone operator to introduce a newish
+        rule, and allows a zone operator to introduce a new
         algorithm that does not yet have wide support in the field
-        by double signing it with a well known algorithm. But the
+        by double signing it with a well-known algorithm. But the
         rule is too rigid to support other reasonable configurations
         where differing algorithms may be in use, but all of which
         are very widely supported. Multi-signer and inter-provider
-        transfers involving differing but only well known algorithms
+        transfers involving differing but only well-known algorithms
         are cases in point.
       </t>
     </section>
@@ -244,8 +245,8 @@
         strong algorithms. Validators should not unilaterally impose
         requirements that interfere with the zone owner's actual
         intentions. In fact, the clarifying behavior of validators in
-        RFC6840 which states that they should accept "any" valid
-        authentication path is compatible with this stance.
+        RFC6840, which states that they should accept "any" valid
+        authentication path, is compatible with this stance.
       </t>
       <t>
         The emerging threat of quantum computers may offer a more 
@@ -263,21 +264,21 @@
     <section title="Proposed Updates to RFCs" anchor="updates">
       <t>
         Initial proposal: relax the quoted rule in RFC 4035.
-        Change the MUST to a SHOULD, and state that there are
+        Change the MUSTs in Section 2.2 to SHOULD, and state that there are
         valid configurations where this rule could be disregarded.
       </t>
       <t>
         Longer term: develop a scheme to allow a zone owner to
         securely signal their desire for algorithm downgrade
-        protection. One possible method to do this is a "DS hack":
+        protection. One possible method to do this is by leveraging DS records:
         namely overloading the signed DS record set in the parent
         zone to convey this signal, a technique that has been met
         with some resistance by protocol purists in the past.
         Another method would be to define a new resource record type
-        for this purpose. Special consideration would have to given
+        for this purpose. Special consideration would have to be given
         to where such a signal would be placed for the root zone if
         needed (or whether the root zone should just have a hardcoded
-        rule). Details of such a proposal are deferred to a future
+        rule). Details of such a proposal is deferred to a future
         document (or a revision of this one). If and when such a
         proposal is developed, the text in RFC 6840, Section 5.11 will
         need to be updated to enforce algorithm downgrade protection
@@ -341,6 +342,7 @@
           <date />
         </front>
       </reference>
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml3/reference.I-D.draft-huque-dnssec-alg-nego-03.xml"/>
     </references>
 
   </back>
