@@ -6,9 +6,9 @@ Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
 Updates: 4035, 6840, 8624 (if approved)                     P. Thomassen
 Intended status: Standards Track                              deSEC, SSE
-Expires: 15 January 2024                                     V. Dukhovni
+Expires: 18 January 2024                                     V. Dukhovni
                                                               Google LLC
-                                                            14 July 2023
+                                                            17 July 2023
 
 
                    Multiple Algorithm Rules in DNSSEC
@@ -44,7 +44,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 15 January 2024.
+   This Internet-Draft will expire on 18 January 2024.
 
 Copyright Notice
 
@@ -53,7 +53,7 @@ Copyright Notice
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 1]
+Huque, et al.            Expires 18 January 2024                [Page 1]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -83,6 +83,7 @@ Table of Contents
      4.2.  Moderate approach . . . . . . . . . . . . . . . . . . . .   8
        4.2.1.  Algorithm Transitions . . . . . . . . . . . . . . . .   8
        4.2.2.  Time Dependency of UNIVERSAL Algorithms . . . . . . .   8
+     4.3.  Variable Key Size Algorithms  . . . . . . . . . . . . . .   9
    5.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
    6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
    7.  Informative References  . . . . . . . . . . . . . . . . . . .  10
@@ -108,8 +109,7 @@ Table of Contents
 
 
 
-
-Huque, et al.            Expires 15 January 2024                [Page 2]
+Huque, et al.            Expires 18 January 2024                [Page 2]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -165,7 +165,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 3]
+Huque, et al.            Expires 18 January 2024                [Page 3]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -221,7 +221,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 4]
+Huque, et al.            Expires 18 January 2024                [Page 4]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -277,7 +277,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 5]
+Huque, et al.            Expires 18 January 2024                [Page 5]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -333,7 +333,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 6]
+Huque, et al.            Expires 18 January 2024                [Page 6]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -389,7 +389,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 7]
+Huque, et al.            Expires 18 January 2024                [Page 7]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -445,7 +445,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024                [Page 8]
+Huque, et al.            Expires 18 January 2024                [Page 8]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -469,6 +469,12 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    of the new validation rules is thus advised as soon as support for an
    algorithm is dropped.
 
+4.3.  Variable Key Size Algorithms
+
+   Since algorithm 8 supports variable key sizes, multi-signer
+   configurations involving 8 and 13 should take care to employ an RSA
+   keylength that is computationally infeasible to attack.
+
 5.  Acknowledgements
 
    The liberal proposal in this draft was originally presented in
@@ -491,20 +497,19 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
 
+
+
+
+
+Huque, et al.            Expires 18 January 2024                [Page 9]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
    [RFC4035]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "Protocol Modifications for the DNS Security
               Extensions", RFC 4035, DOI 10.17487/RFC4035, March 2005,
               <https://www.rfc-editor.org/info/rfc4035>.
-
-
-
-
-
-
-Huque, et al.            Expires 15 January 2024                [Page 9]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    [RFC6840]  Weiler, S., Ed. and D. Blacka, Ed., "Clarifications and
               Implementation Notes for DNS Security (DNSSEC)", RFC 6840,
@@ -552,12 +557,7 @@ A.1.  Signing Requirements
 
 
 
-
-
-
-
-
-Huque, et al.            Expires 15 January 2024               [Page 10]
+Huque, et al.            Expires 18 January 2024               [Page 10]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -613,7 +613,7 @@ A.2.  Validator Requirements
 
 
 
-Huque, et al.            Expires 15 January 2024               [Page 11]
+Huque, et al.            Expires 18 January 2024               [Page 11]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -669,7 +669,7 @@ Authors' Addresses
 
 
 
-Huque, et al.            Expires 15 January 2024               [Page 12]
+Huque, et al.            Expires 18 January 2024               [Page 12]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -725,4 +725,4 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 15 January 2024               [Page 13]
+Huque, et al.            Expires 18 January 2024               [Page 13]
