@@ -203,15 +203,15 @@
       <t>
         Effectively, this means that any validator following this rule
         does not provide algorithm downgrade protection, rendering the
-        requirement in RFC 4035 somewhat meaningless. The two quoted
-        assertions in RFC 4035 and 6840 are thus arguably contradictory.
+        requirement in <xref target="RFC4035"/> somewhat meaningless. The two quoted
+        assertions in <xref target="RFC4035"/> and <xref target="RFC6840"/> are thus arguably contradictory.
       </t>
     </section>
 
     <section title="Support for a wide range of validators">
 
       <t>
-        A secondary reason for the rule in RFC 4035 is that it
+        A secondary reason for the rule in <xref target="RFC4035"/> is that it
         allows signed data in the zone to be authenticated by
         a wide range of validating resolvers that may support
         different algorithms. This is sound advice as a general
@@ -263,7 +263,7 @@
 
     <section title="Proposed Updates to RFCs" anchor="updates">
       <t>
-        Initial proposal: relax the quoted rule in RFC 4035.
+        Initial proposal: relax the quoted rule in <xref target="RFC4035"/>.
         Change the MUSTs in Section 2.2 to SHOULD, and state that there are
         valid configurations where this rule could be disregarded.
       </t>
@@ -280,7 +280,7 @@
         needed (or whether the root zone should just have a hardcoded
         rule). Details of such a proposal is deferred to a future
         document (or a revision of this one). If and when such a
-        proposal is developed, the text in RFC 6840, Section 5.11 will
+        proposal is developed, the text in <xref target="RFC6840"/>, Section 5.11 will
         need to be updated to enforce algorithm downgrade protection
         in the presence of the signal.
       </t>
