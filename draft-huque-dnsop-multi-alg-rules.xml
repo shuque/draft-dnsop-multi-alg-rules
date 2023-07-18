@@ -75,7 +75,7 @@
       </address>
     </author>
 
-    <date day="14" month="7" year="2023"/>
+    <date day="17" month="7" year="2023"/>
 
     <!-- Meta-data Declarations -->
 
@@ -502,6 +502,13 @@
           algorithm is dropped.
         </t>
         </section>
+      </section>
+      <section title="Variable Key Size Algorithms">
+        <t>
+          Since algorithm 8 supports variable key sizes, multi-signer
+          configurations involving 8 and 13 should take care to employ
+          an RSA keylength that is computationally infeasible to attack.
+        </t>
       </section>
     </section>
 
