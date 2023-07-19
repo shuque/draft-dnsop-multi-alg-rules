@@ -514,14 +514,15 @@
 
     <section title="Acknowledgements" anchor="acks">
       <t>
-        The liberal proposal in this draft was originally presented in
-        <xref target="ICANN-TALK"/> by S. Huque at the ICANN73 DNSSEC
+        The liberal proposal in this draft was originally proposed in
+        <xref target="ICANN-TALK"/> by Shumon Huque at the ICANN73 DNSSEC
         and Security workshop.
       </t>
       <t>
-        The moderate approach was originally proposed by P. Thomassen and V.
-        Dukhovni after discussions on the problem space with Edward Lewis,
-        Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve Crocker.
+        The moderate approach was originally proposed by Peter Thomassen
+        and Viktor Dukhovni after discussions on the problem space with
+        Edward Lewis, Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve
+        Crocker, and Duane Wessels.
       </t>
     </section>
 

@@ -477,13 +477,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 5.  Acknowledgements
 
-   The liberal proposal in this draft was originally presented in
-   [ICANN-TALK] by S.  Huque at the ICANN73 DNSSEC and Security
+   The liberal proposal in this draft was originally proposed in
+   [ICANN-TALK] by Shumon Huque at the ICANN73 DNSSEC and Security
    workshop.
 
-   The moderate approach was originally proposed by P.  Thomassen and V.
-   Dukhovni after discussions on the problem space with Edward Lewis,
-   Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve Crocker.
+   The moderate approach was originally proposed by Peter Thomassen and
+   Viktor Dukhovni after discussions on the problem space with Edward
+   Lewis, Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve Crocker,
+   and Duane Wessels.
 
 6.  Normative References
 
@@ -496,7 +497,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               Rose, "Resource Records for the DNS Security Extensions",
               RFC 4034, DOI 10.17487/RFC4034, March 2005,
               <https://www.rfc-editor.org/info/rfc4034>.
-
 
 
 
