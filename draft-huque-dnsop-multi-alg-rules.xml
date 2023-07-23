@@ -75,7 +75,7 @@
       </address>
     </author>
 
-    <date day="17" month="7" year="2023"/>
+    <date day="22" month="7" year="2023"/>
 
     <!-- Meta-data Declarations -->
 
@@ -106,16 +106,16 @@
         This document updates RFCs 4035, 6840, and 8624.
       </t>
     </abstract>
+    <note removeInRFC="true">
+      <name>Discussion Venues</name>
+      <t>Source for this draft and an issue tracker can be found at
+  <eref target="https://github.com/shuque/draft-dnsop-multi-alg-rules"/>.</t>
+    </note>
   </front>
 
   <middle>
 
     <section title="Introduction and Motivation" anchor="intro">
-      <t>
-        RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH BEFORE
-        PUBLISHING: The source for this draft is maintained in GitHub
-        at: https://github.com/shuque/draft-dnsop-multi-alg-rules
-      </t>
       <t>
         The Domain Name System Security Extensions (DNSSEC)
         <xref target="RFC4033" /> <xref target="RFC4034" />

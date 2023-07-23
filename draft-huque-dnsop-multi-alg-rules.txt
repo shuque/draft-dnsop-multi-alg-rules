@@ -6,9 +6,9 @@ Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
 Updates: 4035, 6840, 8624 (if approved)                     P. Thomassen
 Intended status: Standards Track                              deSEC, SSE
-Expires: 18 January 2024                                     V. Dukhovni
+Expires: 23 January 2024                                     V. Dukhovni
                                                               Google LLC
-                                                            17 July 2023
+                                                            22 July 2023
 
 
                    Multiple Algorithm Rules in DNSSEC
@@ -29,6 +29,13 @@ Abstract
 
    This document updates RFCs 4035, 6840, and 8624.
 
+Discussion Venues
+
+   This note is to be removed before publishing as an RFC.
+
+   Source for this draft and an issue tracker can be found at
+   https://github.com/shuque/draft-dnsop-multi-alg-rules.
+
 Status of This Memo
 
    This Internet-Draft is submitted in full conformance with the
@@ -44,19 +51,19 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 18 January 2024.
+
+
+Huque, et al.            Expires 23 January 2024                [Page 1]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   This Internet-Draft will expire on 23 January 2024.
 
 Copyright Notice
 
    Copyright (c) 2023 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
-
-
-
-Huque, et al.            Expires 18 January 2024                [Page 1]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    This document is subject to BCP 78 and the IETF Trust's Legal
    Provisions Relating to IETF Documents (https://trustee.ietf.org/
@@ -95,10 +102,6 @@ Table of Contents
 
 1.  Introduction and Motivation
 
-   RFC EDITOR: PLEASE REMOVE THE FOLLOWING PARAGRAPH BEFORE PUBLISHING:
-   The source for this draft is maintained in GitHub at:
-   https://github.com/shuque/draft-dnsop-multi-alg-rules
-
    The Domain Name System Security Extensions (DNSSEC) [RFC4033]
    [RFC4034] [RFC4035] add data origin authentication and integrity
    protection to the Domain Name System (DNS), by having DNS zone owners
@@ -106,10 +109,7 @@ Table of Contents
 
 
 
-
-
-
-Huque, et al.            Expires 18 January 2024                [Page 2]
+Huque, et al.            Expires 23 January 2024                [Page 2]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -165,7 +165,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 3]
+Huque, et al.            Expires 23 January 2024                [Page 3]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -221,7 +221,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 4]
+Huque, et al.            Expires 23 January 2024                [Page 4]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -277,7 +277,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 5]
+Huque, et al.            Expires 23 January 2024                [Page 5]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -333,7 +333,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 6]
+Huque, et al.            Expires 23 January 2024                [Page 6]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -389,7 +389,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 7]
+Huque, et al.            Expires 23 January 2024                [Page 7]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -445,7 +445,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 8]
+Huque, et al.            Expires 23 January 2024                [Page 8]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -501,7 +501,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024                [Page 9]
+Huque, et al.            Expires 23 January 2024                [Page 9]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -557,7 +557,7 @@ A.1.  Signing Requirements
 
 
 
-Huque, et al.            Expires 18 January 2024               [Page 10]
+Huque, et al.            Expires 23 January 2024               [Page 10]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -613,7 +613,7 @@ A.2.  Validator Requirements
 
 
 
-Huque, et al.            Expires 18 January 2024               [Page 11]
+Huque, et al.            Expires 23 January 2024               [Page 11]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -669,7 +669,7 @@ Authors' Addresses
 
 
 
-Huque, et al.            Expires 18 January 2024               [Page 12]
+Huque, et al.            Expires 23 January 2024               [Page 12]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -725,4 +725,4 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-Huque, et al.            Expires 18 January 2024               [Page 13]
+Huque, et al.            Expires 23 January 2024               [Page 13]
