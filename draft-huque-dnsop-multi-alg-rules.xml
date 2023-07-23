@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-00"
+        docName="draft-huque-dnsop-multi-alg-rules-01"
         ipr="trust200902"
         updates="4035,6840,8624"
         obsoletes=""
@@ -211,27 +211,38 @@
       </blockquote>
       <t>
         In the following, two different ways of amending this existing
-        specification are described.
-        <!-- Viktor:  I think the "liberal approach" should be dropped.
-          it is more fragile and will leave resolvers to make up various
-          heuristics that will create uncertainty and confusion. -->
+        specification are described. Both methods advocate that
+        signers adopt a more liberal approach to the requirement of
+        signatures by algorithm sets. The minimal approach provides
+        cautionary advice to zone owners about the selection of
+        appropriate algorithm sets. The comprehensive approach more
+        precisely defines which algorithms are safe to use in this
+        way, and additionally places some of the burden on validating
+        resolvers to ensure this safety.
       </t>
-      <section title="Liberal Approach" anchor="liberal">
+      <section title="Minimal Approach" anchor="minimal">
         <t>
           The most straightforward proposal is to relax the rule quoted from RFC
           4035 by changing the MUST to a SHOULD, and state that there are valid
           configurations where this rule could be disregarded.
         </t>
         <t>
-          This approach requires zone owners / signers to exercise great caution
-          when selecting the set of algorithms for which RRSIGs are served or
-          not served. In particular, when using an algorithm that is not
-          universally supported among the resolver population (such as algorithm
-          7) together with a supported one (such as algorithm 13), resolvers
-          may return SERVFAIL under certain circumstances.
+         This approach puts the burden on the zone owners/ signers to only
+         select suitably strong and well supported algorithms (such as
+         algorithms 8 and 13). It does not require any new changes to
+         validating resolvers - they just have to follow the clarifying
+         rule in RFC 6840 that any valid authentication path is acceptable.
+         It thus represents a minimal approach to achieving the goals
+         outlined in the abstract.
         </t>
         <t>
-          More explicitly, a zone that is using some algorithm as its sole
+         If zone owners do not carefully select such a set of widely
+         supported algorithms, this can cause problems. For example, if
+         they choose 7 as one of the algorithms, it may cause validators
+         to return SERVFAIL under certain circumstances.
+        </t>
+        <t>
+          More explicitly, a zone that is using such an algorithm as its sole
           signing algorithm is (correctly) treated as insecure by resolvers that
           do not support that algorithm. When attempting to transfer the domain
           to another DNS provider through a multi-signer setup with a supported
@@ -242,7 +253,7 @@
         </t>
       </section>
 
-      <section title="Moderate Approach" anchor="moderate">
+      <section title="Comprehensive Approach" anchor="comprehensive">
         <t>
           This approach establishes a mechanism allowing the signer to determine
           which RRSIGs can be skipped, without risking validation failures. It
@@ -358,7 +369,7 @@
             algorithms (such as algorithm 7 to 13), without risking SERVFAIL
             responses in the event that a resolver no longer supports one of
             the algorithms (e.g. 7). For a detailed discussion, see
-            <xref target="moderate-security">Security Considerations</xref>.
+            <xref target="comprehensive-security">Security Considerations</xref>.
           </t>
           <t>
             DNS operators in a multi-signer setup are free to limit their
@@ -401,10 +412,10 @@
 
     <section title="IANA Considerations" anchor="IANA">
       <t>
-        The <xref target="liberal">liberal approach</xref> has no IANA actions.
+        The <xref target="minimal">minimal approach</xref> has no IANA actions.
       </t>
       <t>
-        When the <xref target="moderate">moderate approach</xref> is taken,
+        When the <xref target="comprehensive">comprehensive approach</xref> is taken,
         this section will need to be updated to describe the construction of
         the new IANA registry for the implementation status and requirements of
         DNSSEC signing algorithms.
@@ -412,9 +423,9 @@
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <section title="Liberal approach">
+      <section title="Minimal approach">
         <t>
-          The liberal approach requires the zone owner and signer(s) to take
+          The minimal approach requires the zone owner and signer(s) to take
           great care in order to not break working setups by entering a
           multi-signer setup. In particular, when transferring a zone to another
           DNS provider and switching from e.g. algorithm 7 to 13 in the process,
@@ -423,7 +434,7 @@
           algorithm 7, the result will be SERVFAIL.
         </t>
         <t>
-          The liberal approach is thus only workable in cases where the
+          The minimal approach is thus only workable in cases where the
           multi-signer setup involves universally supported algorithms
           exclusively. As the set of universally supported algorithms evolves
           over time, zone owners and signers need to monitor developments and
@@ -431,7 +442,7 @@
           algorithms is declining and SERVFAIL looms.
         </t>
       </section>
-      <section title="Moderate approach" anchor="moderate-security">
+      <section title="Comprehensive approach" anchor="comprehensive-security">
         <section title="Algorithm Transitions">
         <t>
           The new validation requirements guarantee that when a zone is in a
@@ -514,12 +525,12 @@
 
     <section title="Acknowledgements" anchor="acks">
       <t>
-        The liberal proposal in this draft was originally proposed in
+        The minimal proposal in this draft was originally proposed in
         <xref target="ICANN-TALK"/> by Shumon Huque at the ICANN73 DNSSEC
         and Security workshop.
       </t>
       <t>
-        The moderate approach was originally proposed by Peter Thomassen
+        The comprehensive approach was originally proposed by Peter Thomassen
         and Viktor Dukhovni after discussions on the problem space with
         Edward Lewis, Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve
         Crocker, and Duane Wessels.
