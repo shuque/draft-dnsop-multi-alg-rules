@@ -287,9 +287,9 @@
             </li>
             <li>
               <t>
-                "MUST NOT sign" algorithms can never be UNIVERSAL. "MUST
-                validate" is a prerequisite for UNIVERSAL. Changes that affect
-                whether an algorithm is UNIVERSAL require standards action.
+                "MUST validate" is a prerequisite for UNIVERSAL. Changes that
+                affect whether an algorithm is UNIVERSAL require standards
+                action.
               </t>
             </li>
             <li>
@@ -300,55 +300,68 @@
             </li>
           </ul>
           <t>
-            Also, new terminology is established for algorithms in "MUST NOT
-            sign" status: these are designated as "INSECURE" algorithms.
+            Also, the notion of FORMERLY UNIVERSAL signing algorithms is
+            introduced:
           </t>
-          <t>
-            As soon as a "MUST validate" algorithm is known or expected to have
-            declining validation support, it should be moved to status "MUST
-            NOT sign" (which removes the UNIVERSAL label if present, and
-            renders the algorithm INSECURE). Therefore, this document updates
-            algorithms 5 and 7 to "MUST NOT sign".
-          </t>
-          <t>
-            The following algorithms are thus INSECURE: 1, 3, 5, 6, 7, 12
-          </t>
+          <ul>
+            <li>
+              <t>
+                As soon as a UNIVERSAL algorithm is known or expected to have
+                declining validation support, it should be moved to FORMERLY
+                UNIVERSAL.
+              </t>
+            </li>
+            <li>
+              <t>
+                Algorithms 5 and 7 are the only algorithms initially declared
+                FORMERLY UNIVERSAL.
+                [ TODO Were 1, 3, 6, 12 ever universally supported? ]
+              </t>
+            </li>
+          </ul>
         </section>
         <section title="Signer Requirements">
           <ol>
             <li>
-              Signers must sign with at least one UNIVERSAL algorithm if at
-              least one UNIVERSAL algorithm is present in the DS RRset or trust
-              anchor set. Other signatures are OPTIONAL.
+              Absent any UNIVERSAL algorithms in the DS RRset or trust anchor
+              set, or when any FORMERLY UNIVERSAL algorithms are present,
+              signers MUST sign with all algorithms listed.
             </li>
             <li>
-              Absent any UNIVERSAL algorithms in the DS RRset or trust anchor
-              set, signers MUST sign with all algorithms listed.
+              Otherwise, signers MUST sign with at least one UNIVERSAL algorithm
+              listed in the DS RRset or trust anchor set. Other signatures are
+              OPTIONAL.
             </li>
           </ol>
+          <t>
+            UNIVERSAL and FORMERLY UNIVERSAL algorithms SHOULD NOT appear
+            together in a DS RRset or trust anchor set. In fact, FORMERLY
+            UNIVERSAL algorithms are best avoided: signers SHOULD transition
+            to other algorithms that are UNIVERSAL.
+          </t>
         </section>
         <section title="Validator Requirements">
           <ol>
             <li>
               When the DS RRset or trust anchor set for a zone includes an
-              unsupported INSECURE algorithm, validators MUST treat the zone as
-              unsigned, even if the DS RRset or trust anchor set lists another
-              supported algorithm.
+              unsupported FORMERLY UNIVERSAL algorithm, validators MUST treat
+              the zone as unsigned, even if the DS RRset or trust anchor set
+              lists another supported algorithm.
             </li>
             <li>
               Otherwise, validators MUST accept any valid path.
             </li>
           </ol>
           <t>
-            Implementing these rules requires validators to keep a
-            record of unsupported INSECURE algorithms, so that the zone's security
+            Implementing these rules requires validators to keep a record of
+            unsupported FORMERLY UNIVERSAL algorithms, so that the zone's security
             status can be established upon inspection of a DS record or TA set.
           </t>
           <t>
-            Any otherwise supported-by-default algorithms that are disabled on
-            the validator as a matter of local policy SHOULD also be considered
-            "INSECURE" unless explicitly configured as "unsupported".  The choice
-            should be made with care.  Disabling an algorithm to "INSECURE" downgrades
+            Any UNIVERSAL algorithms that a validator supports by default but are disabled on
+            the validator as a matter of local policy SHOULD also be considered FORMERLY
+            UNIVERSAL unless explicitly configured as "unsupported".  The choice
+            should be made with care.  Disabling an algorithm to FORMERLY UNIVERSAL downgrades
             zones signed with the disabled algorithm, while disabling it as "unsupported"
             risks making some zones "bogus", if it was used as the only signing algorithm
             by one of the signers in a multi-signer, multi-algorithm setup.
@@ -356,16 +369,14 @@
         </section>
         <section title="Discussion">
           <t>
-            It is observed that both signers and validators need to know only
-            one of the concepts "UNIVERSAL" and "INSECURE".  To use several
-            signing algorithms, signers only need to know which algorithms are
-            UNIVERSAL, while validators only need to know which are INSECURE.
-            This limits the implementation effort.
+            It is observed that validators need only to know the concept of
+            "FORMERLY UNIVERSAL"; knowledge of which algorithms are UNIVERSAL is
+            not required. This limits the implementation effort.
           </t>
           <t>
             The new validation requirements enable stable multi-signer setups
             using UNIVERSAL algorithms as well as robust provider
-            transfers and algorithm upgrades from INSECURE to UNIVERSAL
+            transfers and algorithm upgrades from FORMERLY UNIVERSAL to UNIVERSAL
             algorithms (such as algorithm 7 to 13), without risking SERVFAIL
             responses in the event that a validator no longer supports one of
             the algorithms (e.g. 7). For a detailed discussion, see
@@ -379,8 +390,8 @@
           <t>
             When a UNIVERSAL algorithm is in use, signatures of other
             algorithms are not required. DNS providers are thus free to
-            introduce additional (non-INSECURE) algorithms without forcing
-            other participating providers to do the same.
+            introduce additional algorithms (which were never UNIVERSAL) without
+            forcing other participating providers to do the same.
           </t>
           <t>
             When trust anchors are in use for a zone and there is one with a
@@ -400,7 +411,7 @@
             In typical cases, particularly in the case of the root zone, both
             algorithms will be UNIVERSAL. In a hypothetical emergency situation
             where only the new algorithm is UNIVERSAL and the old was just
-            downgraded to INSECURE, the new signatures would need to be
+            downgraded to FORMERLY UNIVERSAL, the new signatures would need to be
             introduced immediately.  A short dual signing period would then be
             required for continuity.  Validators would be expected to defer
             disabling the old algorithm until after the root zone rollover is
@@ -472,31 +483,31 @@
           by validators that do not support this algorithm. (This is as before.)
           When transferring the domain to another provider via a multi-signer
           setup with algorithm 13, however, the zone's security status will now
-          remain "insecure", as the DS RRset still includes INSECURE algorithm
-          7. The presence of algorithm 13 is inconsequential at this point.
-          Only once algorithm 7 is removed, the zone turns secure. 
+          remain "insecure", as the DS RRset still includes FORMERLY UNIVERSAL
+          algorithm 7. The presence of algorithm 13 is inconsequential at this
+          point. Only once algorithm 7 is removed, the zone turns secure.
         </t>
         <t>
-          This rule prevents validation breakage when the validator encounters
-          an unsupported RRSIG from an outdated algorithm, and instead
-          acknowledges the fact that the signer is using an algorithm that is
-          in "MUST NOT sign" status, which (depending on validator support)
-          might render the zone insecure. This allows for glitch-free algorithm
-          upgrades, with the security status of the zone changing only once the
-          transition is complete.
+          This rule acknowledges the fact that the signer is using a FORMERLY
+          UNIVERSAL algorithm that SHOULD NOT be used for signing, which might
+          render the zone insecure for validators that lack support. This
+          prevents validation breakage when the validator encounters an
+          unsupported RRSIG from an outdated algorithm, and allows for
+          glitch-free algorithm upgrades with the security status of the zone
+          changing only once the transition is complete.
         </t>
         <t>
           Validators supporting both algorithms retain security
           throughtout the transition. In case of a permanent multi-signer setup,
-          the zone maintainer needs to upgrade the INSECURE algorithm to a
-          UNIVERSAL one in order to restore universal validation.
+          the zone maintainer needs to move from the FORMERLY UNIVERSAL
+          algorithm to a UNIVERSAL one in order to restore universal validation.
         </t>
         <section title="Time Dependency of UNIVERSAL Algorithms">
         <t>
           The same situation occurs when an algorithm is removed from the set of
-          UNIVERSAL algorithms. In this case, the algorithm will enter "MUST NOT
-          sign" status and become INSECURE. If the zone continues to use the
-          INSECURE algorithm, it will continue to be accepted by supporting
+          UNIVERSAL algorithms. In this case, the algorithm will become FORMERLY
+          UNIVERSAL. If the zone continues to use the FORMERLY UNIVERSAL
+          algorithm, it will continue to be accepted by supporting
           validators, while non-supporting validators will treat the zone
           as insecure until the algorithm is replaced.
         </t>
@@ -505,7 +516,7 @@
           signers MAY begin to return signatures for just that algorithm. This
           is, in fact, not a problem, as validators do not need to know the
           concept of UNIVERSAL; they just need to support that algorithm (or,
-          typically, explicitly classify it as INSECURE). A problem could only
+          typically, explicitly classify it as FORMERLY UNIVERSAL). A problem could only
           occur if the corresponding RRSIG was not supported by a non-negligible
           population of validators; however, in that case labeling the algorithm
           as UNIVERSAL would have been premature. Determining universal support
@@ -520,7 +531,7 @@
           trigger overly conservative SERVFAIL responses.
         </t>-->
         <t>
-          Validators dropping support for INSECURE algorithms (e.g. 7) without
+          Validators dropping support for FORMERLY UNIVERSAL algorithms (e.g. 7) without
           implementing this specification will produce SERVFAIL responses for
           multi-signer setups involving the disabled algorithm. Implementation
           of the new validation rules is thus advised as soon as support for an
