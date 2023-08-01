@@ -443,14 +443,29 @@
         </t>
       </section>
       <section title="Comprehensive approach" anchor="comprehensive-security">
-        <section title="Algorithm Transitions">
         <t>
-          The new validation requirements guarantee that when a zone is in a
-          multi-signer setup with two algorithms, the security level is the
-          same as it would be if the zone was in a single-signer setup using
-          the weakest of them (from the validator's perspective). This resolves
-          undue SERVFAIL issues that could occur with certain algorithm
-          combinations under the previous rules.
+          The new validation requirements presume that zones using multiple
+          algorithms are either in a state of transition (e.g. when switching
+          providers) or in a permanent multi-provider configuration. In the
+          first case, if the outgoing algorithm is not supported by the
+          validator, the zone would have been treated as insecure before the
+          transition. For the second case, it is noted that the purpose of
+          multi-provider setups is to provide resilience against any single
+          provider's failure. Consequently, the zone owner is assumed to
+          consider the security guarantees given by any single provider to be
+          acceptable for the whole zone. By implication, if one of the providers
+          has fallen behind and is signing with an algorithm that is no longer
+          supported by some resolvers (and thus promises no security), there is
+          no guarantee of DNSSEC security for the zone.
+        </t>
+        <t>
+          In other words, the validation requirements guarantee that a zone in a
+          multi-provider setup has the same security level as if all but one of
+          the involved providers would be unavailable. Consequently, when the
+          configuration involves an algorithm that is no longer universally
+          supported, non-supporting validators may treat the zone as insecure.
+          This resolves undue SERVFAIL issues that could occur with certain
+          algorithm combinations under the previous rules.
         </t>
         <t>
           For example, a zone using only algorithm 7 is treated as insecure
@@ -476,7 +491,6 @@
           the zone maintainer needs to upgrade the INSECURE algorithm to a
           UNIVERSAL one in order to restore universal validation.
         </t>
-        </section>
         <section title="Time Dependency of UNIVERSAL Algorithms">
         <t>
           The same situation occurs when an algorithm is removed from the set of
@@ -617,8 +631,9 @@
           advertised algorithms; a validator can thus assume that something is
           wrong when supported signatures are missing.
           As a side effect, the rule also protects against downgrade-to-weaker
-          attacks, so that an attacker cannot undetectably strip away
-          signatures by a stronger algorithm from signed DNS responses. This
+          attacks, where an attacker would strip away signatures from signed DNS
+          responses and only attach one for an algorithm that the attacker is
+          able to forge. This
           property is not a core guarantee of DNSSEC (see below).
         </t>
       </section>

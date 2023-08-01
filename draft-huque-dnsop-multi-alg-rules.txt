@@ -88,17 +88,16 @@ Table of Contents
    4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
      4.1.  Minimal approach  . . . . . . . . . . . . . . . . . . . .   8
      4.2.  Comprehensive approach  . . . . . . . . . . . . . . . . .   8
-       4.2.1.  Algorithm Transitions . . . . . . . . . . . . . . . .   8
-       4.2.2.  Time Dependency of UNIVERSAL Algorithms . . . . . . .   9
+       4.2.1.  Time Dependency of UNIVERSAL Algorithms . . . . . . .   9
      4.3.  Variable Key Size Algorithms  . . . . . . . . . . . . . .   9
-   5.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .   9
-   6.  Normative References  . . . . . . . . . . . . . . . . . . . .   9
+   5.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
+   6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
    7.  Informative References  . . . . . . . . . . . . . . . . . . .  10
-   Appendix A.  Current Multiple Algorithm Rules . . . . . . . . . .  10
+   Appendix A.  Current Multiple Algorithm Rules . . . . . . . . . .  11
      A.1.  Signing Requirements  . . . . . . . . . . . . . . . . . .  11
-     A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  11
+     A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  12
      A.3.  Incompatible Use Cases  . . . . . . . . . . . . . . . . .  12
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  12
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
 
 1.  Introduction and Motivation
 
@@ -106,6 +105,7 @@ Table of Contents
    [RFC4034] [RFC4035] add data origin authentication and integrity
    protection to the Domain Name System (DNS), by having DNS zone owners
    (or their operators) crytographically sign their zone data.
+
 
 
 
@@ -332,13 +332,8 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 
 
-<<<<<<< HEAD
+
 Huque, et al.            Expires 23 January 2024                [Page 6]
-=======
-
-
-Huque, et al.            Expires 18 January 2024                [Page 6]
->>>>>>> ac834c7 (Replace 'resolver' with 'validator' for accuracy)
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -418,13 +413,26 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 4.2.  Comprehensive approach
 
-4.2.1.  Algorithm Transitions
+   The new validation requirements presume that zones using multiple
+   algorithms are either in a state of transition (e.g. when switching
+   providers) or in a permanent multi-provider configuration.  In the
+   first case, if the outgoing algorithm is not supported by the
+   validator, the zone would have been treated as insecure before the
+   transition.  For the second case, it is noted that the purpose of
+   multi-provider setups is to provide resilience against any single
+   provider's failure.  Consequently, the zone owner is assumed to
+   consider the security guarantees given by any single provider to be
+   acceptable for the whole zone.  By implication, if one of the
+   providers has fallen behind and is signing with an algorithm that is
+   no longer supported by some resolvers (and thus promises no
+   security), there is no guarantee of DNSSEC security for the zone.
 
-   The new validation requirements guarantee that when a zone is in a
-   multi-signer setup with two algorithms, the security level is the
-   same as it would be if the zone was in a single-signer setup using
-   the weakest of them (from the validator's perspective).  This
-   resolves undue SERVFAIL issues that could occur with certain
+   In other words, the validation requirements guarantee that a zone in
+   a multi-provider setup has the same security level as if all but one
+   of the involved providers would be unavailable.  Consequently, when
+   the configuration involves an algorithm that is no longer universally
+   supported, non-supporting validators may treat the zone as insecure.
+   This resolves undue SERVFAIL issues that could occur with certain
    algorithm combinations under the previous rules.
 
    For example, a zone using only algorithm 7 is treated as insecure by
@@ -434,6 +442,13 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    remain "insecure", as the DS RRset still includes INSECURE algorithm
    7.  The presence of algorithm 13 is inconsequential at this point.
    Only once algorithm 7 is removed, the zone turns secure.
+
+
+
+Huque, et al.            Expires 23 January 2024                [Page 8]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
 
    This rule prevents validation breakage when the validator encounters
    an unsupported RRSIG from an outdated algorithm, and instead
@@ -448,14 +463,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    maintainer needs to upgrade the INSECURE algorithm to a UNIVERSAL one
    in order to restore universal validation.
 
-
-
-Huque, et al.            Expires 23 January 2024                [Page 8]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
-4.2.2.  Time Dependency of UNIVERSAL Algorithms
+4.2.1.  Time Dependency of UNIVERSAL Algorithms
 
    The same situation occurs when an algorithm is removed from the set
    of UNIVERSAL algorithms.  In this case, the algorithm will enter
@@ -489,6 +497,15 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    configurations involving 8 and 13 should take care to employ an RSA
    keylength that is computationally infeasible to attack.
 
+
+
+
+
+Huque, et al.            Expires 23 January 2024                [Page 9]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
 5.  Acknowledgements
 
    The minimal proposal in this draft was originally proposed in
@@ -501,15 +518,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    Crocker, and Duane Wessels.
 
 6.  Normative References
-
-
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 9]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
@@ -543,6 +551,17 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
 7.  Informative References
 
+
+
+
+
+
+
+Huque, et al.            Expires 23 January 2024               [Page 10]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
    [DNSSEC-AUTO]
               Wisser, U. and S. Huque, "DNSSEC Automation",
               <https://www.ietf.org/archive/id/draft-ietf-dnsop-dnssec-
@@ -558,14 +577,6 @@ Appendix A.  Current Multiple Algorithm Rules
    and validators, as specified by the original DNSSEC specification and
    in effect until updated by this document.  It is included for purely
    informational purposes and context.
-
-
-
-
-Huque, et al.            Expires 23 January 2024               [Page 10]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
 A.1.  Signing Requirements
 
@@ -598,10 +609,18 @@ A.1.  Signing Requirements
    of downgrade-to-insecure attack by requiring RRSIGs for all
    advertised algorithms; a validator can thus assume that something is
    wrong when supported signatures are missing.  As a side effect, the
-   rule also protects against downgrade-to-weaker attacks, so that an
-   attacker cannot undetectably strip away signatures by a stronger
-   algorithm from signed DNS responses.  This property is not a core
-   guarantee of DNSSEC (see below).
+   rule also protects against downgrade-to-weaker attacks, where an
+
+
+
+Huque, et al.            Expires 23 January 2024               [Page 11]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
+   attacker would strip away signatures from signed DNS responses and
+   only attach one for an algorithm that the attacker is able to forge.
+   This property is not a core guarantee of DNSSEC (see below).
 
 A.2.  Validator Requirements
 
@@ -613,15 +632,6 @@ A.2.  Validator Requirements
    may not apply a "logical AND" approach to all advertised algorithms.
 
    Accordingly, Section 5.11 of DNSSEC Clarifications [RFC6840] states:
-
-
-
-
-
-Huque, et al.            Expires 23 January 2024               [Page 11]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    |  This requirement applies to servers, not validators.  Validators
    |  SHOULD accept any single valid path.  They SHOULD NOT insist that
@@ -657,6 +667,13 @@ A.3.  Incompatible Use Cases
       imposes a significant computational burden, unless a selective
       algorithm negotiation mechanism is also developed.
 
+
+
+Huque, et al.            Expires 23 January 2024               [Page 12]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+
+
    As the above rules present a severe limitation for these use cases,
    this document proposes to relax them in a way so that the set of
    signatures provided is still "large enough" to ensure reliable DNSSEC
@@ -672,13 +689,6 @@ Authors' Addresses
    Email: shuque@gmail.com
 
 
-
-
-Huque, et al.            Expires 23 January 2024               [Page 12]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
    Peter Thomassen
    deSEC, SSE
    Berlin
@@ -689,21 +699,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    Viktor Dukhovni
    Google LLC
    Email: ietf-dane@dukhovni.org
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
