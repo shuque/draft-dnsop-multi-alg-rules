@@ -116,8 +116,8 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
    Current specifications [RFC4035][RFC6840] require that a zone be
    signed with each signing algorithm listed in a zone's DS RRset or
-   appearing via its trust anchors.  This poses a problem for (at least)
-   the following cases:
+   appearing via its trust anchors (TAs).  This poses a problem for (at
+   least) the following cases:
 
    *  In multi-signer setups (Multi-Signer Extensions [RFC8901]
       Section 2.1.2), multiple providers using distinct DNSSEC keys can
@@ -302,19 +302,18 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
    2.  Otherwise, validators MUST accept any valid path.
 
-   Implementing these rules requires validating resolvers to keep a
-   record of unsupported INSECURE algorithms, so that the zone's
-   security status can be established upon inspection of a DS record or
-   TA set.
+   Implementing these rules requires validators to keep a record of
+   unsupported INSECURE algorithms, so that the zone's security status
+   can be established upon inspection of a DS record or TA set.
 
-   Any otherwise supported by default algorithms that are disabled by
-   the resolver operator as a matter of local policy SHOULD also be
-   considered "INSECURE" unless explicitly configured as "unsupported".
-   The choice should be made with care.  Disabling an algorithm to
-   "INSECURE" downgrades zones signed with the disabled algorithm, while
-   disabling it as "unsupported" risks making some zones "bogus", if it
-   was used as the only signing algorithm by one of the signers in a
-   multi-signer, multi-algorithm setup.
+   Any otherwise supported-by-default algorithms that are disabled on
+   the validator as a matter of local policy SHOULD also be considered
+   "INSECURE" unless explicitly configured as "unsupported".  The choice
+   should be made with care.  Disabling an algorithm to "INSECURE"
+   downgrades zones signed with the disabled algorithm, while disabling
+   it as "unsupported" risks making some zones "bogus", if it was used
+   as the only signing algorithm by one of the signers in a multi-
+   signer, multi-algorithm setup.
 
 2.2.4.  Discussion
 
@@ -328,12 +327,18 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    using UNIVERSAL algorithms as well as robust provider transfers and
    algorithm upgrades from INSECURE to UNIVERSAL algorithms (such as
    algorithm 7 to 13), without risking SERVFAIL responses in the event
-   that a resolver no longer supports one of the algorithms (e.g. 7).
+   that a validator no longer supports one of the algorithms (e.g. 7).
    For a detailed discussion, see Security Considerations (Section 4.2).
 
 
 
+<<<<<<< HEAD
 Huque, et al.            Expires 23 January 2024                [Page 6]
+=======
+
+
+Huque, et al.            Expires 18 January 2024                [Page 6]
+>>>>>>> ac834c7 (Replace 'resolver' with 'validator' for accuracy)
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
@@ -347,7 +352,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    additional (non-INSECURE) algorithms without forcing other
    participating providers to do the same.
 
-   For zones with trust anchors, when there is a trust anchor with a
+   When trust anchors are in use for a zone and there is one with a
    UNIVERSAL algorithm, it is permissible to introduce a new trust
    anchor for a different algorithm before introducing the corresponding
    DNSKEY and RRSIGs into the zone.  (Of course, they need to be added
@@ -364,7 +369,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    where only the new algorithm is UNIVERSAL and the old was just
    downgraded to INSECURE, the new signatures would need to be
    introduced immediately.  A short dual signing period would then be
-   required for continuity.  Resolvers would be expected to defer
+   required for continuity.  Validators would be expected to defer
    disabling the old algorithm until after the root zone rollover is
    completed.
 
@@ -418,30 +423,30 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    The new validation requirements guarantee that when a zone is in a
    multi-signer setup with two algorithms, the security level is the
    same as it would be if the zone was in a single-signer setup using
-   the weakest of them (from the resolver's perspective).  This resolves
-   undue SERVFAIL issues that could occur with certain algorithm
-   combinations under the previous rules.
+   the weakest of them (from the validator's perspective).  This
+   resolves undue SERVFAIL issues that could occur with certain
+   algorithm combinations under the previous rules.
 
    For example, a zone using only algorithm 7 is treated as insecure by
-   resolvers that do not support this algorithm.  (This is as before.)
+   validators that do not support this algorithm.  (This is as before.)
    When transferring the domain to another provider via a multi-signer
    setup with algorithm 13, however, the zone's security status will now
    remain "insecure", as the DS RRset still includes INSECURE algorithm
    7.  The presence of algorithm 13 is inconsequential at this point.
    Only once algorithm 7 is removed, the zone turns secure.
 
-   This rule prevents validation breakage when the resolver encounters
+   This rule prevents validation breakage when the validator encounters
    an unsupported RRSIG from an outdated algorithm, and instead
    acknowledges the fact that the signer is using an algorithm that is
-   in "MUST NOT sign" status, which (depending on resolver support)
+   in "MUST NOT sign" status, which (depending on validator support)
    might render the zone insecure.  This allows for glitch-free
    algorithm upgrades, with the security status of the zone changing
    only once the transition is complete.
 
-   Resolvers supporting both algorithms retain full validation
-   throughtout the transition.  In case of a permanent multi-signer
-   setup, the zone maintainer needs to upgrade the INSECURE algorithm to
-   a UNIVERSAL one in order to restore universal validation.
+   Validators supporting both algorithms retain security throughtout the
+   transition.  In case of a permanent multi-signer setup, the zone
+   maintainer needs to upgrade the INSECURE algorithm to a UNIVERSAL one
+   in order to restore universal validation.
 
 
 
@@ -455,24 +460,24 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    The same situation occurs when an algorithm is removed from the set
    of UNIVERSAL algorithms.  In this case, the algorithm will enter
    "MUST NOT sign" status and become INSECURE.  If the zone continues to
-   use the INSECURE algorithm, it will continue to fully validate with
-   supporting resolvers, while non-supporting resolvers will treat the
+   use the INSECURE algorithm, it will continue to be accepted by
+   supporting validators, while non-supporting validators will treat the
    zone as insecure until the algorithm is replaced.
 
    Conversely, when an algorithm is added to the set of UNIVERSAL ones,
    signers MAY begin to return signatures for just that algorithm.  This
-   is, in fact, not a problem, as resolvers do not need to know the
+   is, in fact, not a problem, as validators do not need to know the
    concept of UNIVERSAL; they just need to support that algorithm (or,
    typically, explicitly classify it as INSECURE).  A problem could only
    occur if the corresponding RRSIG was not supported by a non-
-   negligible population of resolvers; however, in that case labeling
+   negligible population of validators; however, in that case labeling
    the algorithm as UNIVERSAL would have been premature.  Determining
    universal support cannot be solved on the protocol level, and it is
    the community's responsibility to only advance an algorithm to
-   UNIVERSAL when safe enough, i.e. when the population of resolvers
+   UNIVERSAL when safe enough, i.e. when the population of validators
    lacking support is deemed negligible.
 
-   Resolvers dropping support for INSECURE algorithms (e.g. 7) without
+   Validators dropping support for INSECURE algorithms (e.g. 7) without
    implementing this specification will produce SERVFAIL responses for
    multi-signer setups involving the disabled algorithm.  Implementation
    of the new validation rules is thus advised as soon as support for an
