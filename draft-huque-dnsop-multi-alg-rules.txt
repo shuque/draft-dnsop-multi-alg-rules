@@ -6,13 +6,15 @@ Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
 Updates: 4035, 6840, 8624 (if approved)                     P. Thomassen
 Intended status: Standards Track                              deSEC, SSE
-Expires: 23 January 2024                                     V. Dukhovni
+Expires: 1 May 2024                                          V. Dukhovni
                                                               Google LLC
-                                                            22 July 2023
+                                                              D. Wessels
+                                                                Verisign
+                                                         29 October 2023
 
 
                    Multiple Algorithm Rules in DNSSEC
-                  draft-huque-dnsop-multi-alg-rules-01
+                  draft-huque-dnsop-multi-alg-rules-02
 
 Abstract
 
@@ -46,19 +48,22 @@ Status of This Memo
    working documents as Internet-Drafts.  The list of current Internet-
    Drafts is at https://datatracker.ietf.org/drafts/current/.
 
+
+
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 1]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    Internet-Drafts are draft documents valid for a maximum of six months
    and may be updated, replaced, or obsoleted by other documents at any
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-
-
-Huque, et al.            Expires 23 January 2024                [Page 1]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
-   This Internet-Draft will expire on 23 January 2024.
+   This Internet-Draft will expire on 1 May 2024.
 
 Copyright Notice
 
@@ -76,28 +81,38 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction and Motivation . . . . . . . . . . . . . . . . .   2
+   1.  Introduction and Motivation . . . . . . . . . . . . . . . . .   3
    2.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   4
      2.1.  Minimal Approach  . . . . . . . . . . . . . . . . . . . .   4
      2.2.  Comprehensive Approach  . . . . . . . . . . . . . . . . .   5
        2.2.1.  Updates to RFC 8624 . . . . . . . . . . . . . . . . .   5
        2.2.2.  Signer Requirements . . . . . . . . . . . . . . . . .   6
        2.2.3.  Validator Requirements  . . . . . . . . . . . . . . .   6
-       2.2.4.  Discussion  . . . . . . . . . . . . . . . . . . . . .   6
+       2.2.4.  Discussion  . . . . . . . . . . . . . . . . . . . . .   7
    3.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   7
+   4.  Security Considerations . . . . . . . . . . . . . . . . . . .   8
      4.1.  Minimal approach  . . . . . . . . . . . . . . . . . . . .   8
      4.2.  Comprehensive approach  . . . . . . . . . . . . . . . . .   8
        4.2.1.  Time Dependency of UNIVERSAL Algorithms . . . . . . .   9
-     4.3.  Variable Key Size Algorithms  . . . . . . . . . . . . . .   9
+     4.3.  Variable Key Size Algorithms  . . . . . . . . . . . . . .  10
    5.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
    6.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
-   7.  Informative References  . . . . . . . . . . . . . . . . . . .  10
+   7.  Informative References  . . . . . . . . . . . . . . . . . . .  11
    Appendix A.  Current Multiple Algorithm Rules . . . . . . . . . .  11
      A.1.  Signing Requirements  . . . . . . . . . . . . . . . . . .  11
      A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  12
      A.3.  Incompatible Use Cases  . . . . . . . . . . . . . . . . .  12
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  13
+
+
+
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 2]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
 
 1.  Introduction and Motivation
 
@@ -105,14 +120,6 @@ Table of Contents
    [RFC4034] [RFC4035] add data origin authentication and integrity
    protection to the Domain Name System (DNS), by having DNS zone owners
    (or their operators) crytographically sign their zone data.
-
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 2]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    Current specifications [RFC4035][RFC6840] require that a zone be
    signed with each signing algorithm listed in a zone's DS RRset or
@@ -155,6 +162,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    signed response from that zone, leaving just the unsupported
    signatures, must not be able to disable validation for that zone,
    effectively downgrading the zone to "insecure".  The rules therefore
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 3]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    ensure the downgrade resistance of DNSSEC when only some, but not
    all, of a zone's DS RRset or trust anchor set DNSKEY algorithms are
    supported by a validating resolver.
@@ -162,13 +177,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    This document proposes modifications of the signing and validation
    rules to accommodate additional use cases, without compromising the
    security guarantees given by DNSSEC.
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 3]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
 2.  Proposed Updates to RFCs
 
@@ -208,6 +216,16 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    thus represents a minimal approach to achieving the goals outlined in
    the abstract.
 
+
+
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 4]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    If zone owners do not carefully select such a set of widely supported
    algorithms, this can cause problems.  For example, if they choose 7
    as one of the algorithms, it may cause validators to return SERVFAIL
@@ -218,14 +236,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    that do not support that algorithm.  When attempting to transfer the
    domain to another DNS provider through a multi-signer setup with a
    supported algorithm, affected resolvers will return SERVFAIL when
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 4]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
    presented with the unsupported signature only.  Zone owners and
    signers thus must take great care to not leave a validating resolver
    without a valid supported path when transitioning e.g. from algorithm
@@ -264,6 +274,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    *  Algorithms 8 and 13 are the only algorithms initially declared
       UNIVERSAL.
 
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 5]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    Also, the notion of FORMERLY UNIVERSAL signing algorithms is
    introduced:
 
@@ -274,13 +292,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    *  Algorithms 5 and 7 are the only algorithms initially declared
       FORMERLY UNIVERSAL.  [ TODO Were 1, 3, 6, 12 ever universally
       supported? ]
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 5]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
 2.2.2.  Signer Requirements
 
@@ -320,6 +331,13 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    some zones "bogus", if it was used as the only signing algorithm by
    one of the signers in a multi-signer, multi-algorithm setup.
 
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 6]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
 2.2.4.  Discussion
 
    It is observed that validators need only to know the concept of
@@ -330,14 +348,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    using UNIVERSAL algorithms as well as robust provider transfers and
    algorithm upgrades from FORMERLY UNIVERSAL to UNIVERSAL algorithms
    (such as algorithm 7 to 13), without risking SERVFAIL responses in
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 6]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
    the event that a validator no longer supports one of the algorithms
    (e.g. 7).  For a detailed discussion, see Security Considerations
    (Section 4.2).
@@ -376,23 +386,20 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
 
    The minimal approach (Section 2.1) has no IANA actions.
 
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 7]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    When the comprehensive approach (Section 2.2) is taken, this section
    will need to be updated to describe the construction of the new IANA
    registry for the implementation status and requirements of DNSSEC
    signing algorithms.
 
 4.  Security Considerations
-
-
-
-
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 7]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
 4.1.  Minimal approach
 
@@ -435,6 +442,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    This resolves undue SERVFAIL issues that could occur with certain
    algorithm combinations under the previous rules.
 
+
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 8]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    For example, a zone using only algorithm 7 is treated as insecure by
    validators that do not support this algorithm.  (This is as before.)
    When transferring the domain to another provider via a multi-signer
@@ -442,13 +457,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    remain "insecure", as the DS RRset still includes FORMERLY UNIVERSAL
    algorithm 7.  The presence of algorithm 13 is inconsequential at this
    point.  Only once algorithm 7 is removed, the zone turns secure.
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 8]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    This rule acknowledges the fact that the signer is using a FORMERLY
    UNIVERSAL algorithm that SHOULD NOT be used for signing, which might
@@ -491,20 +499,18 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
    Implementation of the new validation rules is thus advised as soon as
    support for an algorithm is dropped.
 
+
+
+Huque, et al.              Expires 1 May 2024                   [Page 9]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
 4.3.  Variable Key Size Algorithms
 
    Since algorithm 8 supports variable key sizes, multi-signer
    configurations involving 8 and 13 should take care to employ an RSA
    keylength that is computationally infeasible to attack.
-
-
-
-
-
-Huque, et al.            Expires 23 January 2024                [Page 9]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
 5.  Acknowledgements
 
@@ -549,18 +555,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
               DOI 10.17487/RFC8901, September 2020,
               <https://www.rfc-editor.org/info/rfc8901>.
 
-7.  Informative References
 
 
-
-
-
-
-
-Huque, et al.            Expires 23 January 2024               [Page 10]
+Huque, et al.              Expires 1 May 2024                  [Page 10]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
 
+
+7.  Informative References
 
    [DNSSEC-AUTO]
               Wisser, U. and S. Huque, "DNSSEC Automation",
@@ -608,16 +610,16 @@ A.1.  Signing Requirements
    Although unstated in that document, the above rule prevents this kind
    of downgrade-to-insecure attack by requiring RRSIGs for all
    advertised algorithms; a validator can thus assume that something is
+
+
+
+Huque, et al.              Expires 1 May 2024                  [Page 11]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    wrong when supported signatures are missing.  As a side effect, the
    rule also protects against downgrade-to-weaker attacks, where an
-
-
-
-Huque, et al.            Expires 23 January 2024               [Page 11]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
-
    attacker would strip away signatures from signed DNS responses and
    only attach one for an algorithm that the attacker is able to forge.
    This property is not a core guarantee of DNSSEC (see below).
@@ -662,17 +664,20 @@ A.3.  Incompatible Use Cases
       rollover, while introducing the new algorithm into the zone only
       later in the process.
 
+
+
+
+
+
+Huque, et al.              Expires 1 May 2024                  [Page 12]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2023
+
+
    *  Furthermore, for online signers attempting to deploy multiple
       algorithms, producing signatures for several algorithms also
       imposes a significant computational burden, unless a selective
       algorithm negotiation mechanism is also developed.
-
-
-
-Huque, et al.            Expires 23 January 2024               [Page 12]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2023
-
 
    As the above rules present a severe limitation for these use cases,
    this document proposes to relax them in a way so that the set of
@@ -683,16 +688,11 @@ Authors' Addresses
 
    Shumon Huque
    Salesforce
-   415 Mission Street, 3rd Floor
-   San Francisco, CA 94105
-   United States of America
    Email: shuque@gmail.com
 
 
    Peter Thomassen
    deSEC, SSE
-   Berlin
-   Germany
    Email: peter@desec.io
 
 
@@ -701,6 +701,9 @@ Authors' Addresses
    Email: ietf-dane@dukhovni.org
 
 
+   Duane Wessels
+   Verisign
+   Email: dwessels@verisign.com
 
 
 
@@ -722,7 +725,4 @@ Authors' Addresses
 
 
 
-
-
-
-Huque, et al.            Expires 23 January 2024               [Page 13]
+Huque, et al.              Expires 1 May 2024                  [Page 13]
