@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-03"
+        docName="draft-huque-dnsop-multi-alg-rules-04"
         ipr="trust200902"
         updates="4035,6840,8624"
         obsoletes=""
@@ -71,7 +71,7 @@
       </address>
     </author>
 
-    <date day="5" month="05" year="2024"/>
+    <date day="06" month="07" year="2024"/>
 
     <!-- Meta-data Declarations -->
 
@@ -206,115 +206,80 @@
         RRset located at the delegating parent (if any).
       </blockquote>
       <t>
-        In the following, two different ways of amending this existing
-        specification are described. Both methods advocate that
-        signers adopt a more liberal approach to the requirement of
-        signatures by algorithm sets. The minimal approach provides
-        cautionary advice to zone owners about the selection of
-        appropriate algorithm sets. The comprehensive approach more
-        precisely defines which algorithms are safe to use in this
-        way, and additionally places some of the burden on validating
-        resolvers to ensure this safety.
+        This document advocates that signers adopt a more liberal
+        approach to the requirement of signatures by algorithm sets
+        when zones employ suitably strong and well known algorithms.
+        It defines  precisely defines which algorithms are safe to use
+        in this way, and additionally places some of the burden on
+        validating resolvers to ensure this safety.
       </t>
-      <section title="Minimal Approach" anchor="minimal">
-        <t>
-          The most straightforward proposal is to relax the rule quoted from RFC
-          4035 by changing the MUST to a SHOULD, and state that there are valid
-          configurations where this rule could be disregarded.
-        </t>
-        <t>
-         This approach puts the burden on the zone owners/ signers to only
-         select suitably strong and well supported algorithms (such as
-         algorithms 8 and 13). It does not require any new changes to
-         validating resolvers - they just have to follow the clarifying
-         rule in RFC 6840 that any valid authentication path is acceptable.
-         It thus represents a minimal approach to achieving the goals
-         outlined in the abstract.
-        </t>
-        <t>
-         If zone owners do not carefully select such a set of widely
-         supported algorithms, this can cause problems. For example, if
-         they choose 7 as one of the algorithms, it may cause validators
-         to return SERVFAIL under certain circumstances.
-        </t>
-        <t>
-          More explicitly, a zone that is using such an algorithm as its sole
-          signing algorithm is (correctly) treated as insecure by resolvers that
-          do not support that algorithm. When attempting to transfer the domain
-          to another DNS provider through a multi-signer setup with a supported
-          algorithm, affected resolvers will return SERVFAIL when presented with
-          the unsupported signature only. Zone owners and signers thus must take
-          great care to not leave a validating resolver without a valid
-          supported path when transitioning e.g. from algorithm 7 to 13.
-        </t>
-      </section>
 
-      <section title="Comprehensive Approach" anchor="comprehensive">
+      <t>
+        The approach establishes a mechanism allowing the signer to determine
+        which RRSIGs can be skipped, without risking validation failures. It
+        does not require all algorithms' RRSIGs to be present, while ensuring
+        that the set of signatures provided is still "large enough" for
+        reliable DNSSEC operation, so that robust multi-signer operation
+        and TA pre-publication are made possible, without risking validation
+        failures.
+      </t>
+      <t>
+        For the case of a multi-signer setup with two generally supported
+        algorithms (such as 8 and 13), the scheme requires only one of the two
+        signatures. Similarly, when pre-publishing a trust anchor, associated
+        signatures don't need to be published immediately, provided that the
+        existing TA's algorithm is generally supported.
+      </t>
+
+      <section title="Updates to RFC 8624">
         <t>
-          This approach establishes a mechanism allowing the signer to determine
-          which RRSIGs can be skipped, without risking validation failures. It
-          does not require all algorithms' RRSIGs to be present, while ensuring
-          that the set of signatures provided is still "large enough" for
-          reliable DNSSEC operation, so that robust multi-signer operation
-          and TA pre-publication are made possible, without risking validation
-          failures.
+          The notion of UNIVERSAL signing algorithms is introduced, and
+          defined as follows:
         </t>
+        <ul>
+          <li>
+            <t>
+              The information contained in the table of
+              <xref target="RFC8624" /> Section 3.1 is transferred into a
+              to-be-erected IANA registry, and a boolean column is added with
+              the heading "universal validation support". Signing algorithms
+              where this column is TRUE are called "UNIVERSAL".
+            </t>
+          </li>
+          <li>
+            <t>
+              "MUST validate" is a prerequisite for UNIVERSAL. Changes that
+              affect whether an algorithm is UNIVERSAL require standards
+              action.
+            </t>
+          </li>
+          <li>
+            <t>
+              Algorithms 8 and 13 are the only algorithms initially declared
+              UNIVERSAL.
+            </t>
+          </li>
+        </ul>
         <t>
-          For the case of a multi-signer setup with two generally supported
-          algorithms (such as 8 and 13), the scheme requires only one of the two
-          signatures. Similarly, when pre-publishing a trust anchor, associated
-          signatures don't need to be published immediately, provided that the
-          existing TA's algorithm is generally supported.
+          Also, the notion of FORMERLY UNIVERSAL signing algorithms is
+          introduced:
         </t>
-        <section title="Updates to RFC 8624">
-          <t>
-            The notion of UNIVERSAL signing algorithms is introduced, and
-            defined as follows:
-          </t>
-          <ul>
-            <li>
-              <t>
-                The information contained in the table of
-                <xref target="RFC8624" /> Section 3.1 is transferred into a
-                to-be-erected IANA registry, and a boolean column is added with
-                the heading "universal validation support". Signing algorithms
-                where this column is TRUE are called "UNIVERSAL".
-              </t>
-            </li>
-            <li>
-              <t>
-                "MUST validate" is a prerequisite for UNIVERSAL. Changes that
-                affect whether an algorithm is UNIVERSAL require standards
-                action.
-              </t>
-            </li>
-            <li>
-              <t>
-                Algorithms 8 and 13 are the only algorithms initially declared
-                UNIVERSAL.
-              </t>
-            </li>
-          </ul>
-          <t>
-            Also, the notion of FORMERLY UNIVERSAL signing algorithms is
-            introduced:
-          </t>
-          <ul>
-            <li>
-              <t>
-                As soon as a UNIVERSAL algorithm is known or expected to have
-                declining validation support, it should be moved to FORMERLY
-                UNIVERSAL.
-              </t>
-            </li>
-            <li>
-              <t>
-                Algorithms 5 and 7 are the only algorithms initially declared
-                FORMERLY UNIVERSAL.
-                [ TODO Were 1, 3, 6, 12 ever universally supported? ]
-              </t>
-            </li>
-          </ul>
+        <ul>
+          <li>
+            <t>
+              As soon as a UNIVERSAL algorithm is known or expected to have
+              declining validation support, it should be moved to FORMERLY
+              UNIVERSAL.
+            </t>
+          </li>
+          <li>
+            <t>
+              Algorithms 5 and 7 are the only algorithms initially declared
+              FORMERLY UNIVERSAL.
+              [ TODO Were 1, 3, 6, 12 ever universally supported? ]
+            </t>
+          </li>
+        </ul>
         </section>
         <section title="Signer Requirements">
           <ol>
@@ -376,7 +341,7 @@
             algorithms (such as algorithm 7 to 13), without risking SERVFAIL
             responses in the event that a validator no longer supports one of
             the algorithms (e.g. 7). For a detailed discussion, see
-            <xref target="comprehensive-security">Security Considerations</xref>.
+            <xref target="Security">Security Considerations</xref>.
           </t>
           <t>
             DNS operators in a multi-signer setup are free to limit their
@@ -414,42 +379,17 @@
             completed.
           </t>
         </section>
-      </section>
     </section>
 
     <section title="IANA Considerations" anchor="IANA">
       <t>
-        The <xref target="minimal">minimal approach</xref> has no IANA actions.
-      </t>
-      <t>
-        When the <xref target="comprehensive">comprehensive approach</xref> is taken,
-        this section will need to be updated to describe the construction of
-        the new IANA registry for the implementation status and requirements of
-        DNSSEC signing algorithms.
+        TODO: this section will need to be updated to describe the
+        construction of the new IANA registry for the implementation status
+        and requirements of DNSSEC signing algorithms.
       </t>
     </section>
 
     <section anchor="Security" title="Security Considerations">
-      <section title="Minimal approach">
-        <t>
-          The minimal approach requires the zone owner and signer(s) to take
-          great care in order to not break working setups by entering a
-          multi-signer setup. In particular, when transferring a zone to another
-          DNS provider and switching from e.g. algorithm 7 to 13 in the process,
-          resolvers that do no longer support algorithm 7 will expect a valid
-          path for algorithm 13. If the response only contains an RRSIG for
-          algorithm 7, the result will be SERVFAIL.
-        </t>
-        <t>
-          The minimal approach is thus only workable in cases where the
-          multi-signer setup involves universally supported algorithms
-          exclusively. As the set of universally supported algorithms evolves
-          over time, zone owners and signers need to monitor developments and
-          upgrade algorithms before validation support for the involved
-          algorithms is declining and SERVFAIL looms.
-        </t>
-      </section>
-      <section title="Comprehensive approach" anchor="comprehensive-security">
         <t>
           The new validation requirements presume that zones using multiple
           algorithms are either in a state of transition (e.g. when switching
@@ -542,19 +482,10 @@
           an RSA keylength that is computationally infeasible to attack.
         </t>
       </section>
-    </section>
 
     <section title="Acknowledgements" anchor="acks">
       <t>
-        The minimal proposal in this draft was originally proposed in
-        <xref target="ICANN-TALK"/> by Shumon Huque at the ICANN73 DNSSEC
-        and Security workshop.
-      </t>
-      <t>
-        The comprehensive approach was originally proposed by Peter Thomassen
-        and Viktor Dukhovni after discussions on the problem space with
-        Edward Lewis, Jakob Schlyter, Johan Stenstam, Shumon Huque, Steve
-        Crocker, and Duane Wessels.
+        TBD.
       </t>
     </section>
 
@@ -580,14 +511,6 @@
         <front>
           <title>DNSSEC Automation</title>
           <author fullname="Ulrich Wisser" initials="U" surname="Wisser" />
-          <author fullname="Shumon Huque" initials="S" surname="Huque" />
-          <date />
-        </front>
-      </reference>
-      <reference anchor="ICANN-TALK"
-                 target="https://tinyurl.com/multisigner-rfc-adjustments">
-        <front>
-          <title>RFC Adjustments for Multi-Signer</title>
           <author fullname="Shumon Huque" initials="S" surname="Huque" />
           <date />
         </front>
