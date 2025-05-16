@@ -131,7 +131,7 @@
         Current specifications <xref target="RFC4035" /><xref target="RFC6840" />
         require that a zone be signed with each signing algorithm listed
         in a zone's DS RRset or appearing via its trust anchors (TAs).
-        This poses a problem for (at least) the following cases:
+        This poses a problem in (at least) the following situations:
       </t>
       <ul>
         <li>
@@ -139,14 +139,14 @@
             In multi-signer setups (<xref target="RFC8901">Multi-Signer
             Extensions</xref> Section 2.1.2), multiple providers using
             distinct DNSSEC keys can cooperatively serve the same DNS zone.
-            This methods does not work however if the providers
+            This method does not work however if the providers
             involved employ different DNSSEC algorithms.
           </t>
         </li>
         <li>
           <t>
             <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
-            describes how to fully automate Multi-Signer operations, including
+            describes how to fully automate multi-signer operations, including
             how to use a transitional state of a multi-signer configuration
             to non-disruptively transfer a signed zone from one provider to
             another. If the old and the new provider do not use the same
@@ -481,13 +481,13 @@
           algorithm is dropped.
         </t>
         </section>
-      </section>
-      <section title="Variable Key Size Algorithms">
-        <t>
-          Since algorithm 8 supports variable key sizes, multi-signer
-          configurations involving 8 and 13 should take care to employ
-          an RSA keylength that is computationally infeasible to attack.
-        </t>
+        <section title="Variable Key Size Algorithms">
+          <t>
+            Since algorithm 8 supports variable key sizes, multi-signer
+            configurations involving 8 and 13 should take care to employ
+            an RSA keylength that is computationally infeasible to attack.
+          </t>
+        </section>
       </section>
 
     <section title="Acknowledgements" anchor="acks">
