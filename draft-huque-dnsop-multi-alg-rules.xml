@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-04"
+        docName="draft-huque-dnsop-multi-alg-rules-05"
         ipr="trust200902"
         updates="4035,6840,8624"
         obsoletes=""
@@ -71,7 +71,7 @@
       </address>
     </author>
 
-    <date day="06" month="07" year="2024"/>
+    <date day="16" month="05" year="2025"/>
 
     <!-- Meta-data Declarations -->
 
