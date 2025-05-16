@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-04"
+        docName="draft-huque-dnsop-multi-alg-rules-05"
         ipr="trust200902"
         updates="4035,6840,8624"
         obsoletes=""
@@ -71,7 +71,14 @@
       </address>
     </author>
 
-    <date day="06" month="07" year="2024"/>
+    <author fullname="Christian Elmerot" initials="C." surname="Elmerot">
+      <organization>Cloudflare</organization>
+      <address>
+        <email>elmerot@cloudflare.com</email>
+      </address>
+    </author>
+
+    <date day="16" month="05" year="2025"/>
 
     <!-- Meta-data Declarations -->
 
@@ -124,7 +131,7 @@
         Current specifications <xref target="RFC4035" /><xref target="RFC6840" />
         require that a zone be signed with each signing algorithm listed
         in a zone's DS RRset or appearing via its trust anchors (TAs).
-        This poses a problem for (at least) the following cases:
+        This poses a problem in (at least) the following situations:
       </t>
       <ul>
         <li>
@@ -132,14 +139,14 @@
             In multi-signer setups (<xref target="RFC8901">Multi-Signer
             Extensions</xref> Section 2.1.2), multiple providers using
             distinct DNSSEC keys can cooperatively serve the same DNS zone.
-            This methods does not work however if the providers
+            This method does not work however if the providers
             involved employ different DNSSEC algorithms.
           </t>
         </li>
         <li>
           <t>
             <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
-            describes how to fully automate Multi-Signer operations, including
+            describes how to fully automate multi-signer operations, including
             how to use a transitional state of a multi-signer configuration
             to non-disruptively transfer a signed zone from one provider to
             another. If the old and the new provider do not use the same
@@ -151,12 +158,29 @@
             When performing an algorithm rollover for a zone with a trust
             anchor, current specifications mandate that the zone has to be
             double-signed with both the old and the new algorithm before
-            publishing the new trust anchor. For the root zone, this could
-            lead to a potentially rather long phase of double-signing (on the
-            order of a year). As this comes with both financial and operational
-            risks, it seems desirable to find a way for publishing the new trust
-            anchor without introducing the new algorithm into the zone just yet.
+            publishing the new trust anchor.
           </t>
+            <ul>
+              <li>
+                <t>
+                  This implies that it is not possible to independently change the
+                  algorithms of the SEP key and other DNSKEYs; however, depending on
+                  local circumstances, an operator might find such an approach more
+                  desirable than simultaneously duplicating all keys for the new
+                  algorithm. For example, a zone could roll the KSK from algorithm 8
+                  to algorithm 13 without changing the ZSK, and later roll the ZSK.
+                </t>
+              </li>
+              <li>
+                <t>
+                  For the root zone, the current rules could
+                  lead to a potentially rather long phase of double-signing (on the
+                  order of a year). As this comes with both financial and operational
+                  risks, it seems desirable to find a way for publishing the new trust
+                  anchor without introducing the new algorithm into the zone just yet.
+                </t>
+              </li>
+            </ul>
         </li>
         <li>
           <t>
@@ -474,18 +498,18 @@
           algorithm is dropped.
         </t>
         </section>
-      </section>
-      <section title="Variable Key Size Algorithms">
-        <t>
-          Since algorithm 8 supports variable key sizes, multi-signer
-          configurations involving 8 and 13 should take care to employ
-          an RSA keylength that is computationally infeasible to attack.
-        </t>
+        <section title="Variable Key Size Algorithms">
+          <t>
+            Since algorithm 8 supports variable key sizes, multi-signer
+            configurations involving 8 and 13 should take care to employ
+            an RSA keylength that is computationally infeasible to attack.
+          </t>
+        </section>
       </section>
 
     <section title="Acknowledgements" anchor="acks">
       <t>
-        TBD.
+        Philip Homburg
       </t>
     </section>
 
