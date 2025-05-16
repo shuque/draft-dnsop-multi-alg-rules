@@ -158,12 +158,29 @@
             When performing an algorithm rollover for a zone with a trust
             anchor, current specifications mandate that the zone has to be
             double-signed with both the old and the new algorithm before
-            publishing the new trust anchor. For the root zone, this could
-            lead to a potentially rather long phase of double-signing (on the
-            order of a year). As this comes with both financial and operational
-            risks, it seems desirable to find a way for publishing the new trust
-            anchor without introducing the new algorithm into the zone just yet.
+            publishing the new trust anchor.
           </t>
+            <ul>
+              <li>
+                <t>
+                  This implies that it is not possible to independently change the
+                  algorithms of the SEP key and other DNSKEYs; however, depending on
+                  local circumstances, an operator might find such an approach more
+                  desirable than simultaneously duplicating all keys for the new
+                  algorithm. For example, a zone could roll the KSK from algorithm 8
+                  to algorithm 13 without changing the ZSK, and later roll the ZSK.
+                </t>
+              </li>
+              <li>
+                <t>
+                  For the root zone, the current rules could
+                  lead to a potentially rather long phase of double-signing (on the
+                  order of a year). As this comes with both financial and operational
+                  risks, it seems desirable to find a way for publishing the new trust
+                  anchor without introducing the new algorithm into the zone just yet.
+                </t>
+              </li>
+            </ul>
         </li>
         <li>
           <t>
@@ -492,7 +509,7 @@
 
     <section title="Acknowledgements" anchor="acks">
       <t>
-        TBD.
+        Philip Homburg
       </t>
     </section>
 
