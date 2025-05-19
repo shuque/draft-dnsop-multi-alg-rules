@@ -234,7 +234,7 @@
         This document advocates that signers adopt a more liberal
         approach to the requirement of signatures by algorithm sets
         when zones employ suitably strong and well known algorithms.
-        It defines  precisely defines which algorithms are safe to use
+        It precisely defines which algorithms are safe to use
         in this way, and additionally places some of the burden on
         validating resolvers to ensure this safety.
       </t>
