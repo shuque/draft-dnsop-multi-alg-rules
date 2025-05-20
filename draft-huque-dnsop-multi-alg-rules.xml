@@ -206,7 +206,7 @@
         anchor set DNSKEY algorithms are supported by a validating resolver.
       </t>
       <t>
-        This document proposes modifications to the IANA signing algorithm registry and
+        This document proposes minor modifications to the IANA signing algorithm registry and
         modifications of the signing and validation rules
         to accommodate additional use cases, without compromising
         the security guarantees given by DNSSEC.
