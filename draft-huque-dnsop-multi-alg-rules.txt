@@ -6,13 +6,13 @@ Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
 Updates: 4035, 6840, 8624 (if approved)                     P. Thomassen
 Intended status: Standards Track                              deSEC, SSE
-Expires: 17 November 2025                                    V. Dukhovni
+Expires: 29 November 2025                                    V. Dukhovni
                                                               Google LLC
                                                               D. Wessels
                                                                 Verisign
                                                               C. Elmerot
                                                               Cloudflare
-                                                             16 May 2025
+                                                             28 May 2025
 
 
                    Multiple Algorithm Rules in DNSSEC
@@ -53,7 +53,7 @@ Status of This Memo
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 1]
+Huque, et al.           Expires 29 November 2025                [Page 1]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -63,7 +63,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 17 November 2025.
+   This Internet-Draft will expire on 29 November 2025.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 2]
+Huque, et al.           Expires 29 November 2025                [Page 2]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -165,7 +165,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 3]
+Huque, et al.           Expires 29 November 2025                [Page 3]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -221,7 +221,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 4]
+Huque, et al.           Expires 29 November 2025                [Page 4]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -277,7 +277,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 5]
+Huque, et al.           Expires 29 November 2025                [Page 5]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -333,7 +333,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 6]
+Huque, et al.           Expires 29 November 2025                [Page 6]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -389,7 +389,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 7]
+Huque, et al.           Expires 29 November 2025                [Page 7]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -445,7 +445,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 8]
+Huque, et al.           Expires 29 November 2025                [Page 8]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -501,7 +501,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
 
 
-Huque, et al.           Expires 17 November 2025                [Page 9]
+Huque, et al.           Expires 29 November 2025                [Page 9]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -557,7 +557,7 @@ A.1.  Signing Requirements
 
 
 
-Huque, et al.           Expires 17 November 2025               [Page 10]
+Huque, et al.           Expires 29 November 2025               [Page 10]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -613,7 +613,7 @@ A.3.  Incompatible Use Cases
 
 
 
-Huque, et al.           Expires 17 November 2025               [Page 11]
+Huque, et al.           Expires 29 November 2025               [Page 11]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
 
@@ -669,4 +669,4 @@ Authors' Addresses
 
 
 
-Huque, et al.           Expires 17 November 2025               [Page 12]
+Huque, et al.           Expires 29 November 2025               [Page 12]
