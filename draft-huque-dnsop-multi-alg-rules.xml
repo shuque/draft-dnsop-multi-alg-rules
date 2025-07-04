@@ -266,9 +266,9 @@
             <t>
               The information contained in the table of
               <xref target="RFC8624" /> Section 3.1 is transferred into a
-              to-be-erected IANA registry, and a boolean column is added with
-              the heading "universal validation support". Signing algorithms
-              where this column is TRUE are called "UNIVERSAL".
+              to-be-erected IANA registry, and a column is added with
+              the heading "universal validation support". Admissible values
+              are "UNIVERSAL", "FORMERLY-UNIVERSAL", and empty.
             </t>
           </li>
           <li>
@@ -307,7 +307,8 @@
         </ul>
         <t>
           Algorithms that are neither UNIVERSAL nor FORMERLY-UNIVERSAL are called
-          NEVER-UNIVERSAL.
+          NEVER-UNIVERSAL. They have an empty value in the corresponding registry
+          column.
         </t>
       </section>
       <section title="Signer Requirements">

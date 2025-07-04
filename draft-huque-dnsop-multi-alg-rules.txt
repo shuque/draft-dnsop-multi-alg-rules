@@ -238,10 +238,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
    as follows:
 
    *  The information contained in the table of [RFC8624] Section 3.1 is
-      transferred into a to-be-erected IANA registry, and a boolean
-      column is added with the heading "universal validation support".
-      Signing algorithms where this column is TRUE are called
-      "UNIVERSAL".
+      transferred into a to-be-erected IANA registry, and a column is
+      added with the heading "universal validation support".  Admissible
+      values are "UNIVERSAL", "FORMERLY-UNIVERSAL", and empty.
 
    *  "MUST validate" is a prerequisite for UNIVERSAL.  Changes that
       affect whether an algorithm is UNIVERSAL require standards action.
@@ -261,7 +260,8 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
       supported? ]
 
    Algorithms that are neither UNIVERSAL nor FORMERLY-UNIVERSAL are
-   called NEVER-UNIVERSAL.
+   called NEVER-UNIVERSAL.  They have an empty value in the
+   corresponding registry column.
 
 2.2.  Signer Requirements
 
