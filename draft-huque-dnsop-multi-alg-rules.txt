@@ -317,15 +317,15 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC           May 2025
    (e.g. 7).  For a detailed discussion, see Security Considerations
    (Section 4).
 
-   DNS operators in a multi-signer setup are free to limit their
+   If no FORMERLY UNIVERSAL algorithm is in use, but at least one
+   UNIVERSAL one is present, DNS operators are free to limit their
    responses to serve signatures for one UNIVERSAL algorithm only.  This
-   one signature is sufficient to provide a valid path everywhere.
-
-   When a UNIVERSAL algorithm is in use, signatures of other algorithms
-   are not required.  DNS providers are thus free to introduce
-   additional algorithms (which were never UNIVERSAL) without forcing
-   other participating providers to do the same.
-
+   one signature is sufficient to provide a valid path everywhere; other
+   signatures are not required.  DNS providers are thus free to
+   introduce additional algorithms without forcing other participating
+   providers to do the same.  This includes both additional UNIVERSAL
+   algorithms, as well as other (e.g., experimental) algorithms which
+   were never UNIVERSAL.
 
 
 

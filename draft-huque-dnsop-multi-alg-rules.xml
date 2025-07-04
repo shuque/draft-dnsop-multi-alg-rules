@@ -369,15 +369,14 @@
             <xref target="Security">Security Considerations</xref>.
           </t>
           <t>
-            DNS operators in a multi-signer setup are free to limit their
-            responses to serve signatures for one UNIVERSAL algorithm only.
-            This one signature is sufficient to provide a valid path everywhere.
-          </t>
-          <t>
-            When a UNIVERSAL algorithm is in use, signatures of other
-            algorithms are not required. DNS providers are thus free to
-            introduce additional algorithms (which were never UNIVERSAL) without
-            forcing other participating providers to do the same.
+            If no FORMERLY UNIVERSAL algorithm is in use, but at least one UNIVERSAL
+            one is present, DNS operators are free to limit their responses to serve
+            signatures for one UNIVERSAL algorithm only. This one signature is
+            sufficient to provide a valid path everywhere; other signatures are not
+            required. DNS providers are thus free to introduce additional algorithms
+            without forcing other participating providers to do the same. This
+            includes both additional UNIVERSAL algorithms, as well as other (e.g.,
+            experimental) algorithms which were never UNIVERSAL.
           </t>
           <t>
             When trust anchors are in use for a zone and there is one with a
