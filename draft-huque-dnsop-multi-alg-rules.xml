@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-05"
+        docName="draft-huque-dnsop-multi-alg-rules-06"
         ipr="trust200902"
         updates="4035,6840,8624"
         obsoletes=""
@@ -78,7 +78,7 @@
       </address>
     </author>
 
-    <date day="28" month="05" year="2025"/>
+    <date day="07" month="07" year="2025"/>
 
     <!-- Meta-data Declarations -->
 
@@ -164,10 +164,10 @@
               <li>
                 <t>
                   This implies that it is not possible to independently change the
-                  algorithms of the SEP key and other DNSKEYs; however, depending on
-                  local circumstances, an operator might find such an approach more
-                  desirable than simultaneously duplicating all keys for the new
-                  algorithm. For example, a zone could roll the KSK from algorithm 8
+                  SEP key algorithm (unless signing the whole zone with it); however,
+                  depending on local circumstances, an operator might prefer a SEP-only
+                  (KSK) algorithm change over simultaneously duplicating all keys for the
+                  new algorithm. For example, a zone could roll the KSK from algorithm 8
                   to algorithm 13 without changing the ZSK, and later roll the ZSK.
                 </t>
               </li>
@@ -735,6 +735,19 @@
           operation, while facilitating the above use cases.
         </t>
       </section>
+    </section>
+
+    <section title="Change History (to be removed before publication)">
+      <dl>
+        <dt>draft-huque-dnsop-multi-alg-rules-06</dt>
+        <dd>
+          <ul>
+            <li>Editorial changes (add change log, ...)</li>
+            <li>Add overview of cases, and scenario descriptions</li>
+            <li>Clarify what to do when both UNIVERSAL and FORMERLY UNIVERSAL algorithms are present</li>
+          </ul>
+        </dd>
+      </dl>
     </section>
 
   </back>
