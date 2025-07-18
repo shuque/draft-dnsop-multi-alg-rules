@@ -32,7 +32,7 @@
         category="std" consensus="true"
         docName="draft-huque-dnsop-multi-alg-rules-06"
         ipr="trust200902"
-        updates="4035,6840,8624"
+        updates="4035,6840"
         obsoletes=""
         submissionType="IETF" xml:lang="en"
         tocInclude="true" tocDepth="4"
@@ -106,7 +106,7 @@
         root zone.
       </t>
       <t>
-        This document updates RFCs 4035, 6840, and 8624.
+        This document updates RFCs 4035 and 6840.
       </t>
     </abstract>
     <note removeInRFC="true">
@@ -730,6 +730,12 @@
 
     <section title="Change History (to be removed before publication)">
       <dl>
+        <dt>draft-huque-dnsop-multi-alg-rules-07</dt>
+        <dd>
+          <ul>
+            <li>No longer updates RFC 8624 (assumes publication of 8624bis)</li>
+          </ul>
+        </dd>
         <dt>draft-huque-dnsop-multi-alg-rules-06</dt>
         <dd>
           <ul>

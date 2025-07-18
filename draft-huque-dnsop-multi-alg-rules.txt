@@ -4,7 +4,7 @@
 
 Internet Engineering Task Force                                 S. Huque
 Internet-Draft                                                Salesforce
-Updates: 4035, 6840, 8624 (if approved)                     P. Thomassen
+Updates: 4035, 6840 (if approved)                           P. Thomassen
 Intended status: Standards Track                              deSEC, SSE
 Expires: 8 January 2026                                      V. Dukhovni
                                                               Google LLC
@@ -31,7 +31,7 @@ Abstract
    anchor in preparation for an algorithm rollover, such as of the root
    zone.
 
-   This document updates RFCs 4035, 6840, and 8624.
+   This document updates RFCs 4035 and 6840.
 
 Discussion Venues
 
@@ -184,8 +184,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    all, of a zone's DS RRset or trust anchor set DNSKEY algorithms are
    supported by a validating resolver.
 
-   This document proposes modifications of the signing and validation
-   rules to accommodate additional use cases, without compromising the
+   This document proposes modifications to the IANA signing algorithm
+   registry and minor modifications of the signing and validation rules
+   to accommodate additional use cases, without compromising the
    security guarantees given by DNSSEC.
 
 2.  Proposed Updates to RFCs
@@ -205,10 +206,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
    This document advocates that signers adopt a more liberal approach to
    the requirement of signatures by algorithm sets when zones employ
-   suitably strong and well known algorithms.  It defines precisely
-   defines which algorithms are safe to use in this way, and
-   additionally places some of the burden on validating resolvers to
-   ensure this safety.
+   suitably strong and well known algorithms.  It precisely defines
+   which algorithms are safe to use in this way, and additionally places
+   some of the burden on validating resolvers to ensure this safety.
 
    The approach establishes a mechanism allowing the signer to determine
    which RRSIGs can be skipped, without risking validation failures.  It
@@ -715,13 +715,13 @@ A.3.  Incompatible Use Cases
 
 Appendix B.  Change History (to be removed before publication)
 
+   draft-huque-dnsop-multi-alg-rules-07
+      *  No longer updates RFC 8624 (assumes publication of 8624bis)
+
    draft-huque-dnsop-multi-alg-rules-06
       *  Fix IANA considerations
 
       *  Editorial changes (add change log, ...)
-
-      *  Add overview of cases, and scenario descriptions
-
 
 
 
@@ -729,6 +729,8 @@ Huque, et al.            Expires 8 January 2026                [Page 13]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
+
+      *  Add overview of cases, and scenario descriptions
 
       *  Clarify what to do when both UNIVERSAL and FORMERLY UNIVERSAL
          algorithms are present
@@ -758,8 +760,6 @@ Authors' Addresses
    Christian Elmerot
    Cloudflare
    Email: elmerot@cloudflare.com
-
-
 
 
 
