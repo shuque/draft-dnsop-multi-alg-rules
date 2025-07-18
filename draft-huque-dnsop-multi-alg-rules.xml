@@ -461,8 +461,8 @@
         the "Implement for DNSSEC validation" column is "MUST".
       </t>
       <t>
-        Changes that affect the value of the new column require standards action,
-        except when a new row is added an the column remains empty.
+        The default value of the new column for existing and new rows is empty.
+        Changing the value of the column requires standards action.
       </t>
       <t>
         Initially, algorithms 8 and 13 are the only algorithms declared UNIVERSAL.
@@ -733,6 +733,7 @@
         <dt>draft-huque-dnsop-multi-alg-rules-07</dt>
         <dd>
           <ul>
+            <li>Clarify new column update requirements for IANA</li>
             <li>No longer updates RFC 8624 (assumes publication of 8624bis)</li>
           </ul>
         </dd>

@@ -436,8 +436,8 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    rows where the value of the "Implement for DNSSEC validation" column
    is "MUST".
 
-   Changes that affect the value of the new column require standards
-   action, except when a new row is added an the column remains empty.
+   The default value of the new column for existing and new rows is
+   empty.  Changing the value of the column requires standards action.
 
 
 
@@ -716,12 +716,12 @@ A.3.  Incompatible Use Cases
 Appendix B.  Change History (to be removed before publication)
 
    draft-huque-dnsop-multi-alg-rules-07
+      *  Clarify new column update requirements for IANA
+
       *  No longer updates RFC 8624 (assumes publication of 8624bis)
 
    draft-huque-dnsop-multi-alg-rules-06
       *  Fix IANA considerations
-
-      *  Editorial changes (add change log, ...)
 
 
 
@@ -729,6 +729,8 @@ Huque, et al.            Expires 8 January 2026                [Page 13]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
+
+      *  Editorial changes (add change log, ...)
 
       *  Add overview of cases, and scenario descriptions
 
@@ -760,8 +762,6 @@ Authors' Addresses
    Christian Elmerot
    Cloudflare
    Email: elmerot@cloudflare.com
-
-
 
 
 
