@@ -267,9 +267,8 @@
         </t>
         <t>
           As soon as a UNIVERSAL algorithm is known or expected to have declining
-          validation support, it should be moved to FORMERLY-UNIVERSAL. Algorithms
-          5 and 7 are the only algorithms initially declared FORMERLY-UNIVERSAL.
-          [ TODO Were 1, 3, 6, 12 ever universally supported? ]
+          validation support, it should be moved to FORMERLY-UNIVERSAL. Initially,
+          no algorithms are declared FORMERLY-UNIVERSAL.
         </t>
         <t>
           Algorithms that are neither UNIVERSAL nor FORMERLY-UNIVERSAL are called
@@ -368,9 +367,9 @@
         The new validation requirements enable stable multi-signer setups
         using UNIVERSAL algorithms as well as robust provider
         transfers and algorithm upgrades from FORMERLY-UNIVERSAL to UNIVERSAL
-        algorithms (such as algorithm 7 to 13), without risking SERVFAIL
+        algorithms, without risking SERVFAIL
         responses in the event that a validator no longer supports one of
-        the algorithms (e.g., 7). For a detailed discussion, see
+        the algorithms. For a detailed discussion, see
         <xref target="Security">Security Considerations</xref>.
       </t>
       <t>
@@ -466,8 +465,7 @@
       </t>
       <t>
         Initially, algorithms 8 and 13 are the only algorithms declared UNIVERSAL.
-        Algorithms 5 and 7 are the only algorithms initially declared
-        FORMERLY-UNIVERSAL. [ TODO Were 1, 3, 6, 12 ever universally supported? ]
+        No algorithms are initially declared FORMERLY-UNIVERSAL.
       </t>
     </section>
 
@@ -497,13 +495,14 @@
           algorithm combinations under the previous rules.
         </t>
         <t>
-          For example, a zone using only algorithm 7 is treated as insecure
-          by validators that do not support this algorithm. (This is as before.)
-          When transferring the domain to another provider via a multi-signer
-          setup with algorithm 13, however, the zone's security status will now
-          remain "insecure", as the DS RRset still includes FORMERLY-UNIVERSAL
-          algorithm 7. The presence of algorithm 13 is inconsequential at this
-          point. Only once algorithm 7 is removed, the zone turns secure.
+          Example: A zone using only an algorithm that is declared FORMERLY-UNIVERSAL
+          is treated as insecure by validators that do not support this algorithm.
+          (This is as before.) When transferring the domain, via a multi-signer setup,
+          to another provider which uses a currently UNIVERSAL algorithm, however, the
+          zone's security status will now remain "insecure", as the DS RRset still
+          includes the FORMERLY-UNIVERSAL algorithm. The presence of the UNIVERSAL
+          algorithm is inconsequential at this point. Only once the old algorithm is
+          removed, the zone turns secure.
         </t>
         <t>
           This rule acknowledges the fact that the signer is using a FORMERLY-UNIVERSAL
@@ -549,7 +548,7 @@
           trigger overly conservative SERVFAIL responses.
         </t>-->
         <t>
-          Validators dropping support for FORMERLY-UNIVERSAL algorithms (e.g., 7) without
+          Validators dropping support for FORMERLY-UNIVERSAL algorithms without
           implementing this specification will produce SERVFAIL responses for
           multi-signer setups involving the disabled algorithm. Implementation
           of the new validation rules is thus advised as soon as support for an
@@ -733,6 +732,7 @@
         <dt>draft-huque-dnsop-multi-alg-rules-07</dt>
         <dd>
           <ul>
+            <li>Initially don't declare any algorithms FORMERLY-UNIVERSAL</li>
             <li>Clarify new column update requirements for IANA</li>
             <li>No longer updates RFC 8624 (assumes publication of 8624bis)</li>
           </ul>
