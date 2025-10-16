@@ -332,7 +332,7 @@
         <ol>
           <li>
             When the DS RRset or trust anchor set for a zone includes an
-            unsupported FORMERLY-UNIVERSAL algorithm, validators MUST treat
+            unsupported UNIVERSAL or FORMERLY-UNIVERSAL algorithm, validators MUST treat
             the zone as unsigned, even if the DS RRset or trust anchor set
             lists another supported algorithm.
           </li>
@@ -341,27 +341,36 @@
           </li>
         </ol>
         <t>
-          Implementing these rules requires validators to keep a record of
-          unsupported FORMERLY-UNIVERSAL algorithms, so that the zone's security
-          status can be established upon inspection of a DS record or TA set.
+          These rules allow determining a zone's security status by inspection of the DS
+          record or TA set alone, independently of which (compliant) subset of signatures
+          is served by a particular nameserver.
         </t>
         <t>
-          Any UNIVERSAL algorithms that a validator supports by default but are disabled on
-          the validator as a matter of local policy SHOULD also be considered
-          FORMERLY-UNIVERSAL unless explicitly configured as "unsupported".  The choice
-          should be made with care.  Disabling an algorithm to FORMERLY-UNIVERSAL downgrades
-          zones signed with the disabled algorithm, while treating it like a never supported
-          algorithm (that is, as NEVER-UNIVERSAL) risks some zones turning "bogus", if that
-          algorithm is used as the only signing algorithm by one signer in a multi-signer setup.
+          Implementing these rules requires validators to keep a record of unsupported
+          algorithms that it is still expected to support (UNIVERSAL) or once was
+          (FORMERLY-UNIVERSAL).
+        </t>
+        <t>
+          Disabling any UNIVERSAL or FORMERLY-UNIVERSAL algorithm in a validator without
+          implementing these rules will cause the algorithm to be treated like a never
+          supported algorithm (that is, as NEVER-UNIVERSAL).
+          This risks zones turning "bogus", if that algorithm is used as the only signing
+          algorithm by one signer in a multi-signer setup, whereas the correct security
+          status would be "insecure" (as the disabling is a matter of local policy).
         </t>
       </section>
     </section>
 
     <section title="Discussion">
       <t>
-        It is observed that validators need only to know the concept of
-        "FORMERLY-UNIVERSAL"; knowledge of which algorithms are UNIVERSAL or
-        NEVER-UNIVERSAL is not required. This limits the implementation effort.
+        Validators, when configured to disable an algorithm, only need to know whether
+        the disabled algorithm ever was a UNIVERSAL one, which includes currently
+        FORMERLY-UNIVERSAL.
+        Validation rules depend only on this binary distinction; tracking of an algorithm
+        moving from UNIVERSAL to FORMERLY-UNIVERSAL is not required.
+        Implementation therefore can be easily achieved by storing a joint list of
+        algorithm numbers which at any time were UNIVERSAL (regardless of whether the
+        algorithm has moved to FORMERLY-UNIVERSAL).
       </t>
       <t>
         The new validation requirements enable stable multi-signer setups
@@ -404,7 +413,7 @@
         downgraded to FORMERLY-UNIVERSAL, the new signatures would need to be
         introduced immediately.  A short dual signing period would then be
         required for continuity.  Validators would be expected to defer
-        disabling the old algorithm until after the root zone rollover is
+        disabling the old algorithm until after the emergency rollover is
         completed.
       </t>
     </section>
@@ -732,6 +741,7 @@
         <dt>draft-huque-dnsop-multi-alg-rules-07</dt>
         <dd>
           <ul>
+            <li>Clarify what a validator needs to know</li>
             <li>Initially don't declare any algorithms FORMERLY-UNIVERSAL</li>
             <li>Clarify new column update requirements for IANA</li>
             <li>No longer updates RFC 8624 (assumes publication of 8624bis)</li>
