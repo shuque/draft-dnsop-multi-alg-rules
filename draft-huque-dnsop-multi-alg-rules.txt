@@ -81,27 +81,27 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction and Motivation . . . . . . . . . . . . . . . . .   3
-   2.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   4
-     2.1.  UNIVERSAL and FORMERLY-UNIVERSAL Validation Support . . .   5
-     2.2.  Signer Requirements . . . . . . . . . . . . . . . . . . .   5
-     2.3.  Validator Requirements  . . . . . . . . . . . . . . . . .   6
-   3.  Discussion  . . . . . . . . . . . . . . . . . . . . . . . . .   7
-   4.  Example Scenarios . . . . . . . . . . . . . . . . . . . . . .   8
-   5.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   8
-   6.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
-     6.1.  Time Dependency of UNIVERSAL Algorithms . . . . . . . . .  10
-     6.2.  Variable Key Size Algorithms  . . . . . . . . . . . . . .  10
-   7.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  10
-   8.  Normative References  . . . . . . . . . . . . . . . . . . . .  10
-   9.  Informative References  . . . . . . . . . . . . . . . . . . .  11
-   Appendix A.  Current Multiple Algorithm Rules . . . . . . . . . .  11
-     A.1.  Signing Requirements  . . . . . . . . . . . . . . . . . .  11
-     A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  12
+   1.  tl;dr: Nutshell Proof of Sanity . . . . . . . . . . . . . . .   3
+   2.  Introduction and Motivation . . . . . . . . . . . . . . . . .   3
+   3.  Proposed Updates to RFCs  . . . . . . . . . . . . . . . . . .   5
+     3.1.  UNIVERSAL and FORMERLY-UNIVERSAL Validation Support . . .   6
+     3.2.  Signer Requirements . . . . . . . . . . . . . . . . . . .   6
+     3.3.  Validator Requirements  . . . . . . . . . . . . . . . . .   7
+   4.  Discussion  . . . . . . . . . . . . . . . . . . . . . . . . .   7
+   5.  Example Scenarios . . . . . . . . . . . . . . . . . . . . . .   8
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .   9
+     7.1.  Time Dependency of UNIVERSAL Algorithms . . . . . . . . .  10
+     7.2.  Variable Key Size Algorithms  . . . . . . . . . . . . . .  11
+   8.  Acknowledgements  . . . . . . . . . . . . . . . . . . . . . .  11
+   9.  Normative References  . . . . . . . . . . . . . . . . . . . .  11
+   10. Informative References  . . . . . . . . . . . . . . . . . . .  12
+   Appendix A.  Current Multiple Algorithm Rules . . . . . . . . . .  12
+     A.1.  Signing Requirements  . . . . . . . . . . . . . . . . . .  12
+     A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  13
      A.3.  Incompatible Use Cases  . . . . . . . . . . . . . . . . .  13
-   Appendix B.  Change History (to be removed before publication)  .  13
+   Appendix B.  Change History (to be removed before publication)  .  14
    Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  14
-
 
 
 
@@ -114,7 +114,42 @@ Huque, et al.            Expires 8 January 2026                 [Page 2]
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
 
-1.  Introduction and Motivation
+1.  tl;dr: Nutshell Proof of Sanity
+
+   It is well known that
+
+   1.  validators implementations MUST support certain mainstream
+       algorithms ([DNSKEY-IANA]);
+
+   2.  validators MUST accept any valid path ([RFC6840] Section 5.11).
+
+   Thus, when a zone advertises several algorithms which MUST be
+   supported for validation, the zone operator can reasonably expect
+   that validation will work, even when only serving signatures for one
+   of them.  (For use cases see below).
+
+   Therefore,
+
+   3.  if a mainstream algorithm is disabled in a validator (as a matter
+       of local policy), the validator still ought to accept a path
+       using this algorithm, and treat responses as insecure –
+       regardless of other algorithms advertised for the zone.
+
+   *This is because the zone operator has a reasonable expectation that
+   the algorithm is supported in all validators.  The zone operator
+   should not have to expect that serving this path would lead to
+   "bogus" security status / SERVFAIL.*
+
+   Rather, *if a validator due to local policy does not support required
+   mainstream algorithms*, it should *take on resposibility* for this
+   *locally*, and *behave as a non-validating resolver for that zone.*
+
+   This document updates validation rules accordingly: primarily as
+   described above, and secondarily to gracefully cover an implicit
+   issue when a mainstream algorithm reaches its end of life.  Downgrade
+   protection is preserved.
+
+2.  Introduction and Motivation
 
    The Domain Name System Security Extensions (DNSSEC) [RFC4033]
    [RFC4034] [RFC4035] add data origin authentication and integrity
@@ -125,6 +160,15 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    signed with each signing algorithm listed in a zone's DS RRset or
    appearing via its trust anchors (TAs).  This poses a problem in (at
    least) the following situations:
+
+
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 3]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
 
    *  In multi-signer setups (Multi-Signer Extensions [RFC8901]
       Section 2.1.2), multiple providers using distinct DNSSEC keys can
@@ -162,14 +206,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    *  Furthermore, for online signers, producing on the fly signatures
       for several algorithms imposes a significant computational burden.
 
-
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 3]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
    The above issues are not just a theoretical problem.  Real situations
    in the field have occurred where the existing requirements have posed
    an obstacle to DNSSEC deployment and operations.
@@ -178,18 +214,28 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    a zone's DS RRset or trust anchor set includes multiple DNSKEY
    algorithms, an attacker who can strip all the supported RRSIGs from a
    signed response from that zone, leaving just the unsupported
-   signatures, must not be able to disable validation for that zone,
-   effectively downgrading the zone to "insecure".  The rules therefore
-   ensure the downgrade resistance of DNSSEC when only some, but not
-   all, of a zone's DS RRset or trust anchor set DNSKEY algorithms are
-   supported by a validating resolver.
+   signatures, must not be able to cause the response to be considered
+   "insecure" when it otherwise would have been considered "secure".
+   Instead of such a downgrade, the only acceptable effect from attacker
+   interference is to turn a "secure" outcome into a "bogus" one.  The
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 4]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
+
+   rules therefore ensure the downgrade resistance of DNSSEC when only
+   some, but not all, of a zone's DS RRset or trust anchor set DNSKEY
+   algorithms are supported by a validating resolver.
 
    This document proposes modifications to the IANA signing algorithm
    registry and minor modifications of the signing and validation rules
-   to accommodate additional use cases, without compromising the
-   security guarantees given by DNSSEC.
+   to accommodate the above (and potentially other) use cases, without
+   compromising the DNSSEC security guarantees and downgrade resistance.
 
-2.  Proposed Updates to RFCs
+3.  Proposed Updates to RFCs
 
    The heart of the issue is that even though any one acceptable
    signature suffices for validation, the signer cannot, in the general
@@ -218,14 +264,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    TA pre-publication are made possible, without risking validation
    failures.
 
-
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 4]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
    For the case of a multi-signer setup with two generally supported
    algorithms (such as 8 and 13, see [DNSKEY-IANA]), the scheme requires
    only one of the two signatures.  Similarly, when pre-publishing a
@@ -233,10 +271,21 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    immediately, provided that the existing TA's algorithm is generally
    supported.
 
-2.1.  UNIVERSAL and FORMERLY-UNIVERSAL Validation Support
+
+
+
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 5]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
+
+3.1.  UNIVERSAL and FORMERLY-UNIVERSAL Validation Support
 
    The notion of UNIVERSAL signing algorithms is introduced, as
-   described in Section 5.
+   described in Section 6.
 
    Initially, algorithms 8 and 13 are the only algorithms designated to
    have UNIVERSAL validation support.
@@ -249,7 +298,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    called NEVER-UNIVERSAL.  They have an empty value in the
    corresponding registry column.
 
-2.2.  Signer Requirements
+3.2.  Signer Requirements
 
    1.  Absent any UNIVERSAL algorithms in the DS RRset or trust anchor
        set, or when any FORMERLY-UNIVERSAL algorithms are present,
@@ -268,20 +317,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    UNIVERSAL algorithms are best avoided: signers SHOULD transition to
    other algorithms that are UNIVERSAL.
 
-
-
-
-
-
-
-
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 5]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
       +=================+==========================================+
       |                 | FORMERLY-UNIVERSAL                       |
       +=================+=========================+================+
@@ -295,13 +330,21 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
           Table 1: Signer requirements, depending on DS RRset /
                          trust anchor composition
 
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 6]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
+
    Depending on the presence of UNIVERSAL and/or FORMERLY-UNIVERSAL
    algorithms, signatures may be required for all algorithms, or for
    just one.  The presence of NEVER-UNIVERSAL algorithms is not relevant
    for determining whether signatures for all algorithms are required
    (but if so, their signatures MUST be included).
 
-2.3.  Validator Requirements
+3.3.  Validator Requirements
 
    1.  When the DS RRset or trust anchor set for a zone includes an
        unsupported UNIVERSAL or FORMERLY-UNIVERSAL algorithm, validators
@@ -326,19 +369,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    setup, whereas the correct security status would be "insecure" (as
    the disabling is a matter of local policy).
 
-
-
-
-
-
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 6]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
-3.  Discussion
+4.  Discussion
 
    Validators, when configured to disable an algorithm, only need to
    know whether the disabled algorithm ever was a UNIVERSAL one, which
@@ -354,7 +385,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    algorithm upgrades from FORMERLY-UNIVERSAL to UNIVERSAL algorithms,
    without risking SERVFAIL responses in the event that a validator no
    longer supports one of the algorithms.  For a detailed discussion,
-   see Security Considerations (Section 6).
+   see Security Considerations (Section 7).
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 7]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
 
    If no FORMERLY-UNIVERSAL algorithm is in use, but at least one
    UNIVERSAL one is present, DNS operators are free to limit their
@@ -387,14 +425,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    disabling the old algorithm until after the emergency rollover is
    completed.
 
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 7]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
-4.  Example Scenarios
+5.  Example Scenarios
 
    This section elaborates how the signer and validator requirements
    impact various scenarios in practice.  The algorithm combination
@@ -410,6 +441,15 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
       with at least one of the algorithms, and validators MUST accept
       any valid path.
 
+
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 8]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
+
    At least one UNIVERSAL algorithm and a NEVER-UNIVERSAL algorithms:
       Signers MUST sign with at least one UNIVERSAL algorithms, and
       validators MUST accept any valid path.
@@ -422,7 +462,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
       This applies regardless of the presence of any UNIVERSAL or NEVER-
       UNIVERSAL algorithms.
 
-5.  IANA Considerations
+6.  IANA Considerations
 
    [to be removed by RFC Editor: this section assumes draft-ietf-dnsop-
    rfc8624-bis is published.]
@@ -442,15 +482,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    Initially, algorithms 8 and 13 are the only algorithms declared
    UNIVERSAL.  No algorithms are initially declared FORMERLY-UNIVERSAL.
 
-
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 8]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
-6.  Security Considerations
+7.  Security Considerations
 
    The new validation requirements presume that zones using multiple
    algorithms are either in a state of transition (e.g., when switching
@@ -465,6 +497,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    providers has fallen behind and is signing with an algorithm that is
    no longer supported by some resolvers (and thus promises no
    security), there is no guarantee of DNSSEC security for the zone.
+
+
+
+
+Huque, et al.            Expires 8 January 2026                 [Page 9]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
 
    In other words, the validation requirements guarantee that a zone in
    a multi-provider setup has the same security level as if all but one
@@ -497,16 +537,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    maintainer needs to move from the FORMERLY-UNIVERSAL algorithm to a
    UNIVERSAL one in order to restore universal validation.
 
-
-
-
-
-Huque, et al.            Expires 8 January 2026                 [Page 9]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
-6.1.  Time Dependency of UNIVERSAL Algorithms
+7.1.  Time Dependency of UNIVERSAL Algorithms
 
    The same situation occurs when an algorithm is removed from the set
    of UNIVERSAL algorithms.  In this case, the algorithm will become
@@ -523,6 +554,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    if the corresponding RRSIG was not supported by a non-negligible
    population of validators; however, in that case labeling the
    algorithm as UNIVERSAL would have been premature.  Determining
+
+
+
+Huque, et al.            Expires 8 January 2026                [Page 10]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
+
    universal support cannot be solved on the protocol level, and it is
    the community's responsibility to only advance an algorithm to
    UNIVERSAL when safe enough, i.e. when the population of validators
@@ -534,33 +573,23 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    of the new validation rules is thus advised as soon as support for an
    algorithm is dropped.
 
-6.2.  Variable Key Size Algorithms
+7.2.  Variable Key Size Algorithms
 
    Since algorithm 8 supports variable key sizes, multi-signer
    configurations involving 8 and 13 should take care to employ an RSA
    keylength that is computationally infeasible to attack.
 
-7.  Acknowledgements
+8.  Acknowledgements
 
    In order of first contribution or review: Philip Homburg, Libor
    Peltan, Stefan Ubbink
 
-8.  Normative References
+9.  Normative References
 
    [DNSKEY-IANA]
               IANA, "DNS Security Algorithm Numbers",
               <https://www.iana.org/assignments/dns-sec-alg-numbers/dns-
               sec-alg-numbers.xml#dns-sec-alg-numbers-1>.
-
-
-
-
-
-
-Huque, et al.            Expires 8 January 2026                [Page 10]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
 
    [RFC4033]  Arends, R., Austein, R., Larson, M., Massey, D., and S.
               Rose, "DNS Security Introduction and Requirements",
@@ -582,6 +611,13 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
               DOI 10.17487/RFC6840, February 2013,
               <https://www.rfc-editor.org/info/rfc6840>.
 
+
+
+Huque, et al.            Expires 8 January 2026                [Page 11]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
+
    [RFC8624]  Wouters, P. and O. Sury, "Algorithm Implementation
               Requirements and Usage Guidance for DNSSEC", RFC 8624,
               DOI 10.17487/RFC8624, June 2019,
@@ -592,7 +628,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
               DOI 10.17487/RFC8901, September 2020,
               <https://www.rfc-editor.org/info/rfc8901>.
 
-9.  Informative References
+10.  Informative References
 
    [DNSSEC-AUTO]
               Wisser, U. and S. Huque, "DNSSEC Automation",
@@ -611,13 +647,6 @@ A.1.  Signing Requirements
    In addition to the last paragraph of [RFC4035] Section 2.2 quoted
    earlier, Section 5.11 of [RFC6840] clarifies:
 
-
-
-Huque, et al.            Expires 8 January 2026                [Page 11]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
    |  A signed zone MUST include a DNSKEY for each algorithm present in
    |  the zone's DS RRset and expected trust anchors for the zone.
 
@@ -630,6 +659,20 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    owners and signers thus would have to take great care to not leave a
    validating resolver without a valid supported path in such
    situations, e.g., when transitioning from algorithm 7 to 13.
+
+
+
+
+
+
+
+
+
+
+Huque, et al.            Expires 8 January 2026                [Page 12]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
 
    More explicitly, when the sole signing algorithm used by a zone is
    not supported by a given resolver, the resolver will (correctly)
@@ -666,14 +709,6 @@ A.2.  Validator Requirements
    |  all algorithms signaled in the DS RRset work, and they MUST NOT
    |  insist that all algorithms signaled in the DNSKEY RRset work.
 
-
-
-
-Huque, et al.            Expires 8 January 2026                [Page 12]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
-
    At first glance, the assertions that (1) the signer provide
    signatures for all advertised algorithms while (2) the resolver shall
    be content with just one seems somewhat contradictory.  However, the
@@ -686,6 +721,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 A.3.  Incompatible Use Cases
 
    The above rules are incompatible with certain use cases:
+
+
+
+
+Huque, et al.            Expires 8 January 2026                [Page 13]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
 
    *  They are impractical to satisfy if DNS providers deployed in a
       multi-signer configuration are using different signing algorithms.
@@ -711,6 +754,8 @@ A.3.  Incompatible Use Cases
 Appendix B.  Change History (to be removed before publication)
 
    draft-huque-dnsop-multi-alg-rules-07
+      *  Add tl;dr: Nutshell Proof of Sanity
+
       *  Editorial feedback from Stefan Ubbink
 
       *  Clarify what a validator needs to know
@@ -720,15 +765,6 @@ Appendix B.  Change History (to be removed before publication)
       *  Clarify new column update requirements for IANA
 
       *  No longer updates RFC 8624 (assumes publication of 8624bis)
-
-
-
-
-
-Huque, et al.            Expires 8 January 2026                [Page 13]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
-
 
    draft-huque-dnsop-multi-alg-rules-06
       *  Fix IANA considerations
@@ -741,6 +777,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
          algorithms are present
 
 Authors' Addresses
+
+
+
+
+Huque, et al.            Expires 8 January 2026                [Page 14]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
+
 
    Shumon Huque
    Salesforce
@@ -781,4 +825,16 @@ Authors' Addresses
 
 
 
-Huque, et al.            Expires 8 January 2026                [Page 14]
+
+
+
+
+
+
+
+
+
+
+
+
+Huque, et al.            Expires 8 January 2026                [Page 15]
