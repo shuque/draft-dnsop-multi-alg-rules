@@ -135,22 +135,22 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    *  DNSSEC Automation [DNSSEC-AUTO] further describes how to fully
       automate multi-signer operations, including how to use a
       transitional state of a multi-signer configuration to non-
-      disruptively transfer a signed zone from one provider to another.
-      If the old and the new provider do not use the same signing
-      algorithms, the same problem is encountered.
+      disruptively transfer a signed zone from one signer or provider to
+      another.  If the old and the new provider do not use the same
+      signing algorithms, the same problem is encountered.
 
-   *  When performing an algorithm rollover for a zone with a trust
-      anchor, current specifications mandate that the zone has to be
-      double-signed with both the old and the new algorithm before
-      publishing the new trust anchor.
+   *  When performing an algorithm rollover, current specifications
+      mandate that the zone has to be double-signed with both the old
+      and the new algorithm before publishing the new trust anchor or DS
+      record.
 
       -  This implies that it is not possible to independently change
-         the SEP key algorithm (unless signing the whole zone with it);
-         however, depending on local circumstances, an operator might
-         prefer a SEP-only (KSK) algorithm change over simultaneously
-         duplicating all keys for the new algorithm.  For example, a
-         zone could roll the KSK from algorithm 8 to algorithm 13
-         without changing the ZSK, and later roll the ZSK.
+         the KSK algorithm alone (i.e., without signing the whole zone
+         with it); however, depending on local circumstances, an
+         operator might prefer a SEP-only (KSK) algorithm change over
+         simultaneously duplicating all keys for the new algorithm.  For
+         example, a zone could roll the KSK from algorithm 8 to
+         algorithm 13 without changing the ZSK, and later roll the ZSK.
 
       -  For the root zone, the current rules could lead to a
          potentially rather long phase of double-signing (on the order
@@ -227,10 +227,11 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
 
    For the case of a multi-signer setup with two generally supported
-   algorithms (such as 8 and 13), the scheme requires only one of the
-   two signatures.  Similarly, when pre-publishing a trust anchor,
-   associated signatures don't need to be published immediately,
-   provided that the existing TA's algorithm is generally supported.
+   algorithms (such as 8 and 13, see [DNSKEY-IANA]), the scheme requires
+   only one of the two signatures.  Similarly, when pre-publishing a
+   trust anchor, associated signatures don't need to be published
+   immediately, provided that the existing TA's algorithm is generally
+   supported.
 
 2.1.  UNIVERSAL and FORMERLY-UNIVERSAL Validation Support
 
@@ -258,15 +259,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
        algorithm listed in the DS RRset or trust anchor set.  Other
        signatures are OPTIONAL.
 
+   These rules are summarized in Table 1 which indicates the signer
+   requirements depending on the composition of the DS record or trust
+   anchor set.
+
    UNIVERSAL and FORMERLY-UNIVERSAL algorithms SHOULD NOT appear
    together in a DS RRset or trust anchor set.  In fact, FORMERLY-
    UNIVERSAL algorithms are best avoided: signers SHOULD transition to
    other algorithms that are UNIVERSAL.
-
-
-
-
-
 
 
 
@@ -397,7 +397,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 4.  Example Scenarios
 
    This section elaborates how the signer and validator requirements
-   impact various scenariosin practice.  The algorithm combination
+   impact various scenarios in practice.  The algorithm combination
    stated at the beginning of each scenario refers to algorithms
    advertised in the DS RRset or trust anchor set.
 
@@ -542,7 +542,8 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
 7.  Acknowledgements
 
-   Philip Homburg, Libor Peltan
+   In order of first contribution or review: Philip Homburg, Libor
+   Peltan, Stefan Ubbink
 
 8.  Normative References
 
@@ -550,7 +551,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
               IANA, "DNS Security Algorithm Numbers",
               <https://www.iana.org/assignments/dns-sec-alg-numbers/dns-
               sec-alg-numbers.xml#dns-sec-alg-numbers-1>.
-
 
 
 
@@ -654,9 +654,10 @@ A.2.  Validator Requirements
    In general, when a validating resolver supporting any of the
    algorithms listed in a given zone's DS record or TA set responds to a
    query without the CD flag set, it may not treat that zone as
-   insecure, but must return either validated data (AD=1) or RCODE=2
-   (SERVFAIL).  For this purpose, any valid path suffices; the validator
-   may not apply a "logical AND" approach to all advertised algorithms.
+   insecure, but must return either authenticated data (AD=1) or
+   SERVFAIL (RCODE=2).  For this purpose, any valid path suffices; the
+   validator may not apply a "logical AND" approach to all advertised
+   algorithms.
 
    Accordingly, Section 5.11 of DNSSEC Clarifications [RFC6840] states:
 
@@ -664,7 +665,6 @@ A.2.  Validator Requirements
    |  SHOULD accept any single valid path.  They SHOULD NOT insist that
    |  all algorithms signaled in the DS RRset work, and they MUST NOT
    |  insist that all algorithms signaled in the DNSKEY RRset work.
-
 
 
 
@@ -711,6 +711,8 @@ A.3.  Incompatible Use Cases
 Appendix B.  Change History (to be removed before publication)
 
    draft-huque-dnsop-multi-alg-rules-07
+      *  Editorial feedback from Stefan Ubbink
+
       *  Clarify what a validator needs to know
 
       *  Initially don't declare any algorithms FORMERLY-UNIVERSAL
@@ -719,8 +721,6 @@ Appendix B.  Change History (to be removed before publication)
 
       *  No longer updates RFC 8624 (assumes publication of 8624bis)
 
-   draft-huque-dnsop-multi-alg-rules-06
-      *  Fix IANA considerations
 
 
 
@@ -729,6 +729,9 @@ Huque, et al.            Expires 8 January 2026                [Page 13]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
+
+   draft-huque-dnsop-multi-alg-rules-06
+      *  Fix IANA considerations
 
       *  Editorial changes (add change log, ...)
 
@@ -762,9 +765,6 @@ Authors' Addresses
    Christian Elmerot
    Cloudflare
    Email: elmerot@cloudflare.com
-
-
-
 
 
 

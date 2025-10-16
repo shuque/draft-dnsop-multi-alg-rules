@@ -148,23 +148,22 @@
             <xref target="DNSSEC-AUTO">DNSSEC Automation</xref> further
             describes how to fully automate multi-signer operations, including
             how to use a transitional state of a multi-signer configuration
-            to non-disruptively transfer a signed zone from one provider to
+            to non-disruptively transfer a signed zone from one signer or provider to
             another. If the old and the new provider do not use the same
             signing algorithms, the same problem is encountered.
           </t>
         </li>
         <li>
           <t>
-            When performing an algorithm rollover for a zone with a trust
-            anchor, current specifications mandate that the zone has to be
-            double-signed with both the old and the new algorithm before
-            publishing the new trust anchor.
+            When performing an algorithm rollover, current specifications mandate that
+            the zone has to be double-signed with both the old and the new algorithm
+            before publishing the new trust anchor or DS record.
           </t>
             <ul>
               <li>
                 <t>
-                  This implies that it is not possible to independently change the
-                  SEP key algorithm (unless signing the whole zone with it); however,
+                  This implies that it is not possible to independently change the KSK
+                  algorithm alone (i.e., without signing the whole zone with it); however,
                   depending on local circumstances, an operator might prefer a SEP-only
                   (KSK) algorithm change over simultaneously duplicating all keys for the
                   new algorithm. For example, a zone could roll the KSK from algorithm 8
@@ -250,7 +249,8 @@
       </t>
       <t>
         For the case of a multi-signer setup with two generally supported
-        algorithms (such as 8 and 13), the scheme requires only one of the two
+        algorithms (such as 8 and 13, see <xref target="DNSKEY-IANA"></xref>),
+        the scheme requires only one of the two
         signatures. Similarly, when pre-publishing a trust anchor, associated
         signatures don't need to be published immediately, provided that the
         existing TA's algorithm is generally supported.
@@ -290,12 +290,17 @@
           </li>
         </ol>
         <t>
+          These rules are summarized in <xref target="table_signer"></xref> which
+          indicates the signer requirements depending on the composition of the DS
+          record or trust anchor set.
+        </t>
+        <t>
           UNIVERSAL and FORMERLY-UNIVERSAL algorithms SHOULD NOT appear
           together in a DS RRset or trust anchor set. In fact, FORMERLY-UNIVERSAL
           algorithms are best avoided: signers SHOULD transition
           to other algorithms that are UNIVERSAL.
         </t>
-        <table>
+        <table anchor="table_signer">
           <name>Signer requirements, depending on DS RRset / trust anchor composition</name>
           <tbody>
             <tr>
@@ -421,7 +426,7 @@
     <section title="Example Scenarios">
       <t>
         This section elaborates how the signer and validator requirements
-        impact various scenariosin practice. The algorithm combination stated
+        impact various scenarios in practice. The algorithm combination stated
         at the beginning of each scenario refers to algorithms advertised in
         the DS RRset or trust anchor set.
       </t>
@@ -575,7 +580,7 @@
 
     <section title="Acknowledgements" anchor="acks">
       <t>
-        Philip Homburg, Libor Peltan
+        In order of first contribution or review: Philip Homburg, Libor Peltan, Stefan Ubbink
       </t>
     </section>
 
@@ -670,8 +675,8 @@
           In general, when a validating resolver supporting any of the
           algorithms listed in a given zone's DS record or TA set responds to a
           query without the CD flag set, it may not treat that zone as
-          insecure, but must return either validated data (AD=1) or RCODE=2
-          (SERVFAIL). For this purpose, any valid path suffices; the validator
+          insecure, but must return either authenticated data (AD=1) or SERVFAIL
+          (RCODE=2). For this purpose, any valid path suffices; the validator
           may not apply a "logical AND" approach to all advertised algorithms.
         </t>
         <t>
@@ -741,6 +746,7 @@
         <dt>draft-huque-dnsop-multi-alg-rules-07</dt>
         <dd>
           <ul>
+            <li>Editorial feedback from Stefan Ubbink</li>
             <li>Clarify what a validator needs to know</li>
             <li>Initially don't declare any algorithms FORMERLY-UNIVERSAL</li>
             <li>Clarify new column update requirements for IANA</li>
