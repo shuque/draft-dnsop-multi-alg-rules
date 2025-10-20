@@ -118,7 +118,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
 
    It is well known that
 
-   1.  validators implementations MUST support certain mainstream
+   1.  validator implementations MUST support certain mainstream
        algorithms ([DNSKEY-IANA]);
 
    2.  validators MUST accept any valid path ([RFC6840] Section 5.11).
@@ -126,7 +126,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    Thus, when a zone advertises several algorithms which MUST be
    supported for validation, the zone operator can reasonably expect
    that validation will work, even when only serving signatures for one
-   of them.  (For use cases see below).
+   of them.  (For use cases see below.)
 
    Therefore,
 
@@ -140,9 +140,10 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    should not have to expect that serving this path would lead to
    "bogus" security status / SERVFAIL.*
 
-   Rather, *if a validator due to local policy does not support required
-   mainstream algorithms*, it should *take on resposibility* for this
-   *locally*, and *behave as a non-validating resolver for that zone.*
+   Rather, *if a validator _due to local policy_ does not support
+   required mainstream algorithms*, it should *take on responsibility*
+   for that *locally*, and *behave as a non-validating resolver for that
+   zone.*
 
    This document updates validation rules accordingly: primarily as
    described above, and secondarily to gracefully cover an implicit
@@ -160,7 +161,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2025
    signed with each signing algorithm listed in a zone's DS RRset or
    appearing via its trust anchors (TAs).  This poses a problem in (at
    least) the following situations:
-
 
 
 

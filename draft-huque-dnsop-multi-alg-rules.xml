@@ -123,13 +123,13 @@
         It is well known that
       </t>
       <ol>
-        <li>validators implementations MUST support certain mainstream algorithms (<xref target="DNSKEY-IANA"></xref>);</li>
+        <li>validator implementations MUST support certain mainstream algorithms (<xref target="DNSKEY-IANA"></xref>);</li>
         <li>validators MUST accept any valid path (<xref target="RFC6840"></xref> Section 5.11).</li>
       </ol>
       <t>
         Thus, when a zone advertises several algorithms which MUST be supported for
         validation, the zone operator can reasonably expect that validation will work,
-        even when only serving signatures for one of them. (For use cases see below).
+        even when only serving signatures for one of them. (For use cases see below.)
       </t>
       <t>
         Therefore,
@@ -141,7 +141,7 @@
         <strong>This is because the zone operator has a reasonable expectation that the algorithm is supported in all validators. The zone operator should not have to expect that serving this path would lead to "bogus" security status / SERVFAIL.</strong>
       </t>
       <t>
-        Rather, <strong>if a validator due to local policy does not support required mainstream algorithms</strong>, it should <strong>take on resposibility</strong> for this <strong>locally</strong>, and <strong>behave as a non-validating resolver for that zone.</strong>
+        Rather, <strong>if a validator <em>due to local policy</em> does not support required mainstream algorithms</strong>, it should <strong>take on responsibility</strong> for that <strong>locally</strong>, and <strong>behave as a non-validating resolver for that zone.</strong>
       </t>
       <t>
         This document updates validation rules accordingly: primarily as described
