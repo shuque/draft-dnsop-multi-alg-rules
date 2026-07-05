@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-07"
+        docName="draft-huque-dnsop-multi-alg-rules-08"
         ipr="trust200902"
         updates="4035,6840"
         obsoletes=""
@@ -58,7 +58,7 @@
     </author>
 
     <author fullname="Viktor Dukhovni" initials="V." surname="Dukhovni">
-      <organization>Google LLC</organization>
+      <organization>OpenSSL Corporation</organization>
       <address>
         <email>ietf-dane@dukhovni.org</email>
       </address>
@@ -78,7 +78,7 @@
       </address>
     </author>
 
-    <date day="20" month="10" year="2025"/>
+    <date day="5" month="7" year="2026"/>
 
     <!-- Meta-data Declarations -->
 
@@ -630,7 +630,6 @@
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4034.xml"/>
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4035.xml"/>
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6840.xml"/>
-        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8624.xml"/>
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8901.xml"/>
         <reference anchor="DNSKEY-IANA" target="https://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers.xml#dns-sec-alg-numbers-1">
           <front>
