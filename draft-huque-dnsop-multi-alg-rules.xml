@@ -379,7 +379,7 @@
           one UNIVERSAL algorithm is present in the DS RRset or trust anchor set
           and no FORMERLY-UNIVERSAL algorithm is present), a signed zone need not
           include a DNSKEY for every algorithm present in the DS RRset or trust
-          anchor set. It is sufficient to include DNSKEYs for the algorithm(s)
+          anchor set. It is sufficient to include DNSKEYs for the UNIVERSAL algorithm(s)
           actually used to sign the zone. In all other cases (that is, whenever
           signatures for all algorithms are required per the rules above), the
           <xref target="RFC6840" /> Section 5.11 requirement continues to apply
