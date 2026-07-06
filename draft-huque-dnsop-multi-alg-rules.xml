@@ -127,9 +127,9 @@
         <li>validators MUST accept any valid path (<xref target="RFC6840"></xref> Section 5.11).</li>
       </ol>
       <t>
-        Thus, when a zone advertises several algorithms which MUST be supported for
+        Thus, when a zone advertises several algorithms that MUST be supported for
         validation, the zone operator can reasonably expect that validation will work,
-        even when only serving signatures for one of them. (For use cases see below.)
+        even when only serving signatures for one of them. (For use cases, see below.)
       </t>
       <t>
         Therefore,
@@ -156,7 +156,7 @@
         <xref target="RFC4033" /> <xref target="RFC4034" />
         <xref target="RFC4035" /> add data origin authentication
         and integrity protection to the Domain Name System (DNS),
-        by having DNS zone owners (or their operators) crytographically
+        by having DNS zone owners (or their operators) cryptographically
         sign their zone data.
       </t>
       <t>
@@ -171,7 +171,7 @@
             In multi-signer setups (<xref target="RFC8901">Multi-Signer
             Extensions</xref> Section 2.1.2), multiple providers using
             distinct DNSSEC keys can cooperatively serve the same DNS zone.
-            This method does not work however if the providers
+            This method does not work, however, if the providers
             involved employ different DNSSEC algorithms.
           </t>
         </li>
@@ -215,7 +215,7 @@
         </li>
         <li>
           <t>
-            Furthermore, for online signers, producing on the fly signatures
+            Furthermore, for online signers, producing on-the-fly signatures
             for several algorithms imposes a significant computational burden.
           </t>
         </li>
@@ -266,7 +266,7 @@
       <t>
         This document advocates that signers adopt a more liberal
         approach to the requirement of signatures by algorithm sets
-        when zones employ suitably strong and well known algorithms.
+        when zones employ suitably strong and well-known algorithms.
         It precisely defines which algorithms are safe to use
         in this way, and additionally places some of the burden on
         validating resolvers to ensure this safety.
@@ -278,15 +278,14 @@
         does not require all algorithms' RRSIGs to be present, while ensuring
         that the set of signatures provided is still "large enough" for
         reliable DNSSEC operation, so that robust multi-signer operation
-        and TA pre-publication are made possible, without risking validation
-        failures.
+        and TA pre-publication are made possible.
       </t>
       <t>
         For the case of a multi-signer setup with two generally supported
         algorithms (such as 8 and 13, see <xref target="DNSKEY-IANA"></xref>),
         the scheme requires only one of the two
         signatures. Similarly, when pre-publishing a trust anchor, associated
-        signatures don't need to be published immediately, provided that the
+        signatures do not need to be published immediately, provided that the
         existing TA's algorithm is generally supported.
       </t>
 
@@ -324,7 +323,7 @@
           </li>
         </ol>
         <t>
-          These rules are summarized in <xref target="table_signer"></xref> which
+          These rules are summarized in <xref target="table_signer"></xref>, which
           indicates the signer requirements depending on the composition of the DS
           record or trust anchor set.
         </t>
@@ -386,7 +385,7 @@
         </t>
         <t>
           Implementing these rules requires validators to keep a record of unsupported
-          algorithms that it is still expected to support (UNIVERSAL) or once was
+          algorithms that they are still expected to support (UNIVERSAL) or once were
           (FORMERLY-UNIVERSAL).
         </t>
         <t>
@@ -407,8 +406,8 @@
         FORMERLY-UNIVERSAL.
         Validation rules depend only on this binary distinction; tracking of an algorithm
         moving from UNIVERSAL to FORMERLY-UNIVERSAL is not required.
-        Implementation therefore can be easily achieved by storing a joint list of
-        algorithm numbers which at any time were UNIVERSAL (regardless of whether the
+        Implementation can therefore be easily achieved by storing a joint list of
+        algorithm numbers that at any time were UNIVERSAL (regardless of whether the
         algorithm has moved to FORMERLY-UNIVERSAL).
       </t>
       <t>
@@ -476,9 +475,9 @@
           Signers MUST sign with at least one of the algorithms, and validators
           MUST accept any valid path.
         </dd>
-        <dt>At least one UNIVERSAL algorithm and a NEVER-UNIVERSAL algorithms:</dt>
+        <dt>At least one UNIVERSAL algorithm and at least one NEVER-UNIVERSAL algorithm:</dt>
         <dd>
-          Signers MUST sign with at least one UNIVERSAL algorithms, and validators
+          Signers MUST sign with at least one UNIVERSAL algorithm, and validators
           MUST accept any valid path.
         </dd>
         <dt>At least one FORMERLY-UNIVERSAL algorithm:</dt>
@@ -536,7 +535,7 @@
         <t>
           In other words, the validation requirements guarantee that a zone in a
           multi-provider setup has the same security level as if all but one of
-          the involved providers would be unavailable. Consequently, when the
+          the involved providers were unavailable. Consequently, when the
           configuration involves an algorithm that is no longer universally
           supported, non-supporting validators treat the zone as insecure.
           This resolves undue SERVFAIL issues that could occur with certain
@@ -546,11 +545,11 @@
           Example: A zone using only an algorithm that is declared FORMERLY-UNIVERSAL
           is treated as insecure by validators that do not support this algorithm.
           (This is as before.) When transferring the domain, via a multi-signer setup,
-          to another provider which uses a currently UNIVERSAL algorithm, however, the
-          zone's security status will now remain "insecure", as the DS RRset still
+          to another provider that uses a currently UNIVERSAL algorithm, the
+          zone's security status will nonetheless remain "insecure", as the DS RRset still
           includes the FORMERLY-UNIVERSAL algorithm. The presence of the UNIVERSAL
           algorithm is inconsequential at this point. Only once the old algorithm is
-          removed, the zone turns secure.
+          removed does the zone turn secure.
         </t>
         <t>
           This rule acknowledges the fact that the signer is using a FORMERLY-UNIVERSAL
@@ -563,7 +562,7 @@
         </t>
         <t>
           Validators supporting both algorithms retain security
-          throughtout the transition. In case of a permanent multi-signer setup,
+          throughout the transition. In case of a permanent multi-signer setup,
           the zone maintainer needs to move from the FORMERLY-UNIVERSAL
           algorithm to a UNIVERSAL one in order to restore universal validation.
         </t>
@@ -579,7 +578,7 @@
         <t>
           Conversely, when an algorithm is added to the set of UNIVERSAL ones,
           signers MAY begin to return signatures for just that algorithm. This
-          is, in fact, not a problem, as validators do not need to know the
+          is, in fact, not a problem, as validators do not need to be aware of the
           concept of UNIVERSAL; they just need to support that algorithm (or
           later classify it as FORMERLY-UNIVERSAL). A problem could only
           occur if the corresponding RRSIG was not supported by a non-negligible
@@ -587,7 +586,7 @@
           as UNIVERSAL would have been premature. Determining universal support
           cannot be solved on the protocol level, and it is the community's
           responsibility to only advance an algorithm to UNIVERSAL when safe
-          enough, i.e. when the population of validators lacking support is
+          enough, i.e., when the population of validators lacking support is
           deemed negligible.
         </t>
         <!--<t>
@@ -607,7 +606,7 @@
           <t>
             Since algorithm 8 supports variable key sizes, multi-signer
             configurations involving 8 and 13 should take care to employ
-            an RSA keylength that is computationally infeasible to attack.
+            an RSA key length that is computationally infeasible to attack.
           </t>
         </section>
       </section>
@@ -725,7 +724,7 @@
         <t>
           At first glance, the assertions that (1) the signer provide
           signatures for all advertised algorithms while (2) the resolver shall
-          be content with just one seems somewhat contradictory. However, the
+          be content with just one seem somewhat contradictory. However, the
           role of the RRSIG rules is to ensure that the resolver will find a
           valid path (using a "logical OR" strategy), regardless of which
           particular algorithm(s) it supports, and thus be able to distinguish
