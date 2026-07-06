@@ -365,6 +365,34 @@
           for determining whether signatures for all algorithms are required
           (but if so, their signatures MUST be included).
         </t>
+        <t>
+          The requirements above concern which RRSIGs must be present. Under the
+          same conditions, this document also relaxes the DNSKEY-presence
+          requirement of <xref target="RFC6840" /> Section 5.11, which states:
+        </t>
+        <blockquote>
+          A signed zone MUST include a DNSKEY for each algorithm present in
+          the zone's DS RRset and expected trust anchors for the zone.
+        </blockquote>
+        <t>
+          When the conditions of requirement 2 above are met (that is, at least
+          one UNIVERSAL algorithm is present in the DS RRset or trust anchor set
+          and no FORMERLY-UNIVERSAL algorithm is present), a signed zone need not
+          include a DNSKEY for every algorithm present in the DS RRset or trust
+          anchor set. It is sufficient to include DNSKEYs for the algorithm(s)
+          actually used to sign the zone. In all other cases (that is, whenever
+          signatures for all algorithms are required per the rules above), the
+          <xref target="RFC6840" /> Section 5.11 requirement continues to apply
+          unchanged, and a DNSKEY MUST be present for each algorithm in the DS
+          RRset or trust anchor set.
+        </t>
+        <t>
+          This relaxation applies both to algorithms present in the DS RRset and
+          to those present only in the trust anchor set. In particular, it
+          permits a trust anchor for a new algorithm to be pre-published before
+          the corresponding DNSKEY and RRSIGs are introduced into the zone, as
+          described in <xref target="discussion">the Discussion section</xref>.
+        </t>
       </section>
       <section title="Validator Requirements">
         <ol>
@@ -399,7 +427,7 @@
       </section>
     </section>
 
-    <section title="Discussion">
+    <section title="Discussion" anchor="discussion">
       <t>
         Validators, when configured to disable an algorithm, only need to know whether
         the disabled algorithm ever was a UNIVERSAL one, which includes currently
