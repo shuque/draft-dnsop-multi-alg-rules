@@ -203,20 +203,20 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
          trust anchor without introducing the new algorithm into the
          zone just yet.
 
-   *  Another use case is the experimental introduction of a PQC signing
-      algorithm by one provider in a multi-signer setup.  In such a
-      situation, one provider A has rolled to a two-algorithm
-      configuration while another provider B has not.  The current rules
-      require that experimental introduction of PQC algorithms be
-      coordinated amongst participating providers.  As a provider can be
-      involved in a number of multi-signer setups with different other
-      providers, this in the worst case can effectively lead to the
-      unrealistic requirement for all multi-signing providers in the
-      industry to introduce experimental PQC support at the same time.
+   *  Another use case is the experimental introduction of a post-
+      quantum cryptography (PQC) signing algorithm by one provider in a
+      multi-signer setup.  In such a situation, one provider (A) has
+      rolled to a two-algorithm configuration while another provider (B)
+      has not.  The current rules require that experimental introduction
+      of PQC algorithms be coordinated amongst participating providers.
+      As a provider can be involved in a number of multi-signer setups
+      with different providers, this in the worst case can effectively
+      lead to the unrealistic requirement for all multi-signing
+      providers in the industry to introduce experimental PQC support at
+      the same time.
 
    *  Furthermore, for online signers, producing on-the-fly signatures
       for several algorithms imposes a significant computational burden.
-
 
 
 
@@ -451,7 +451,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
    algorithms, as well as other NEVER-UNIVERSAL algorithms (e.g.,
-   experimental ones, or algorithms with limited adoption such as new
+   experimental ones, or algorithms with limited adoption, such as new
    PQC algorithms).
 
    When trust anchors are in use for a zone and there is one with a

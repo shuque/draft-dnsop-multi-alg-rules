@@ -215,12 +215,13 @@
         </li>
         <li>
           <t>
-            Another use case is the experimental introduction of a PQC signing algorithm
-            by one provider in a multi-signer setup. In such a situation, one provider A
-            has rolled to a two-algorithm configuration while another provider B has not.
+            Another use case is the experimental introduction of a post-quantum
+            cryptography (PQC) signing algorithm by one provider in a multi-signer
+            setup. In such a situation, one provider (A)
+            has rolled to a two-algorithm configuration while another provider (B) has not.
             The current rules require that experimental introduction of PQC algorithms
             be coordinated amongst participating providers. As a provider can be
-            involved in a number of multi-signer setups with different other providers,
+            involved in a number of multi-signer setups with different providers,
             this in the worst case can effectively lead to the unrealistic requirement
             for all multi-signing providers in the industry to introduce experimental PQC
             support at the same time.
@@ -472,7 +473,7 @@
         without forcing other participating providers to do the same. This
         includes both additional UNIVERSAL algorithms, as well as other
         NEVER-UNIVERSAL algorithms (e.g., experimental ones, or algorithms with
-        limited adoption such as new PQC algorithms).
+        limited adoption, such as new PQC algorithms).
       </t>
       <t>
         When trust anchors are in use for a zone and there is one with a
