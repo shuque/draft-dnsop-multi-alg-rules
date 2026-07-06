@@ -494,9 +494,6 @@
 
     <section title="IANA Considerations" anchor="IANA">
       <t>
-        [to be removed by RFC Editor: this section assumes draft-ietf-dnsop-rfc8624-bis is published.]
-      </t>
-      <t>
         This document requests that IANA update the "DNS Security Algorithm Numbers"
         registry (<xref target="DNSKEY-IANA"></xref>) with the additional column
         "Validation support status".
@@ -504,7 +501,8 @@
       <t>
         Admissible values for this column are "UNIVERSAL", "FORMERLY-UNIVERSAL", and
         empty. The value "UNIVERSAL" is only acceptable for rows where the value of
-        the "Implement for DNSSEC validation" column is "MUST".
+        the "Implement for DNSSEC Validation" column (<xref target="RFC9904"/>)
+        is "MUST".
       </t>
       <t>
         The default value of the new column for existing and new rows is empty.
@@ -630,6 +628,7 @@
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.4035.xml"/>
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.6840.xml"/>
         <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.8901.xml"/>
+        <xi:include href="https://xml2rfc.tools.ietf.org/public/rfc/bibxml/reference.RFC.9904.xml"/>
         <reference anchor="DNSKEY-IANA" target="https://www.iana.org/assignments/dns-sec-alg-numbers/dns-sec-alg-numbers.xml#dns-sec-alg-numbers-1">
           <front>
             <title>DNS Security Algorithm Numbers</title>

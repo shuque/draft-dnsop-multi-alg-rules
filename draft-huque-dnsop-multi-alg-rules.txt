@@ -459,17 +459,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 6.  IANA Considerations
 
-   [to be removed by RFC Editor: this section assumes draft-ietf-dnsop-
-   rfc8624-bis is published.]
-
    This document requests that IANA update the "DNS Security Algorithm
    Numbers" registry ([DNSKEY-IANA]) with the additional column
    "Validation support status".
 
    Admissible values for this column are "UNIVERSAL", "FORMERLY-
    UNIVERSAL", and empty.  The value "UNIVERSAL" is only acceptable for
-   rows where the value of the "Implement for DNSSEC validation" column
-   is "MUST".
+   rows where the value of the "Implement for DNSSEC Validation" column
+   ([RFC9904]) is "MUST".
 
    The default value of the new column for existing and new rows is
    empty.  Changing the value of the column requires standards action.
@@ -493,10 +490,13 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
    no longer supported by some resolvers (and thus promises no
    security), there is no guarantee of DNSSEC security for the zone.
 
-
-
-
-
+   In other words, the validation requirements guarantee that a zone in
+   a multi-provider setup has the same security level as if all but one
+   of the involved providers were unavailable.  Consequently, when the
+   configuration involves an algorithm that is no longer universally
+   supported, non-supporting validators treat the zone as insecure.
+   This resolves undue SERVFAIL issues that could occur with certain
+   algorithm combinations under the previous rules.
 
 
 
@@ -505,14 +505,6 @@ Huque, et al.            Expires 6 January 2027                 [Page 9]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
-
-   In other words, the validation requirements guarantee that a zone in
-   a multi-provider setup has the same security level as if all but one
-   of the involved providers were unavailable.  Consequently, when the
-   configuration involves an algorithm that is no longer universally
-   supported, non-supporting validators treat the zone as insecure.
-   This resolves undue SERVFAIL issues that could occur with certain
-   algorithm combinations under the previous rules.
 
    Example: A zone using only an algorithm that is declared FORMERLY-
    UNIVERSAL is treated as insecure by validators that do not support
@@ -554,6 +546,14 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
    occur if the corresponding RRSIG was not supported by a non-
    negligible population of validators; however, in that case labeling
    the algorithm as UNIVERSAL would have been premature.  Determining
+   universal support cannot be solved on the protocol level, and it is
+   the community's responsibility to only advance an algorithm to
+   UNIVERSAL when safe enough, i.e., when the population of validators
+   lacking support is deemed negligible.
+
+
+
+
 
 
 
@@ -561,11 +561,6 @@ Huque, et al.            Expires 6 January 2027                [Page 10]
 
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
-
-   universal support cannot be solved on the protocol level, and it is
-   the community's responsibility to only advance an algorithm to
-   UNIVERSAL when safe enough, i.e., when the population of validators
-   lacking support is deemed negligible.
 
    Validators dropping support for FORMERLY-UNIVERSAL algorithms without
    implementing this specification will produce SERVFAIL responses for
@@ -611,6 +606,11 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
               DOI 10.17487/RFC6840, February 2013,
               <https://www.rfc-editor.org/info/rfc6840>.
 
+   [RFC8901]  Huque, S., Aras, P., Dickinson, J., Vcelak, J., and D.
+              Blacka, "Multi-Signer DNSSEC Models", RFC 8901,
+              DOI 10.17487/RFC8901, September 2020,
+              <https://www.rfc-editor.org/info/rfc8901>.
+
 
 
 Huque, et al.            Expires 6 January 2027                [Page 11]
@@ -618,10 +618,10 @@ Huque, et al.            Expires 6 January 2027                [Page 11]
 Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
-   [RFC8901]  Huque, S., Aras, P., Dickinson, J., Vcelak, J., and D.
-              Blacka, "Multi-Signer DNSSEC Models", RFC 8901,
-              DOI 10.17487/RFC8901, September 2020,
-              <https://www.rfc-editor.org/info/rfc8901>.
+   [RFC9904]  Hardaker, W. and W. Kumari, "DNSSEC Cryptographic
+              Algorithm Recommendation Update Process", RFC 9904,
+              DOI 10.17487/RFC9904, November 2025,
+              <https://www.rfc-editor.org/info/rfc9904>.
 
 10.  Informative References
 
