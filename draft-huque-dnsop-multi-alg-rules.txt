@@ -369,9 +369,11 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
    set and no FORMERLY-UNIVERSAL algorithm is present), a signed zone
    need not include a DNSKEY for every algorithm present in the DS RRset
    or trust anchor set.  It is sufficient to include DNSKEYs for the
-   UNIVERSAL algorithm(s) actually used to sign the zone.  In all other
-   cases (that is, whenever signatures for all algorithms are required
-   per the rules above), the [RFC6840] Section 5.11 requirement
+   algorithm(s) actually used to sign the zone; these MUST include at
+   least one UNIVERSAL algorithm (as required above), and MUST include
+   every algorithm for which the zone serves DNSSEC signatures.  In all
+   other cases (that is, whenever signatures for all algorithms are
+   required per the rules above), the [RFC6840] Section 5.11 requirement
    continues to apply unchanged, and a DNSKEY MUST be present for each
    algorithm in the DS RRset or trust anchor set.
 
@@ -382,8 +384,6 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
    described in the Discussion section (Section 4).
 
 3.3.  Validator Requirements
-
-
 
 
 
