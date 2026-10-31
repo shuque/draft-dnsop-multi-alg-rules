@@ -2,21 +2,21 @@
 
 
 
-Internet Engineering Task Force                                 S. Huque
+DNSOP Working Group                                             S. Huque
 Internet-Draft                                                Salesforce
 Updates: 4035, 6840 (if approved)                           P. Thomassen
 Intended status: Standards Track                              deSEC, SSE
-Expires: 6 January 2027                                      V. Dukhovni
+Expires: 4 May 2027                                          V. Dukhovni
                                                      OpenSSL Corporation
                                                               D. Wessels
                                                                 Verisign
                                                               C. Elmerot
                                                               Cloudflare
-                                                             5 July 2026
+                                                         31 October 2026
 
 
                    Multiple Algorithm Rules in DNSSEC
-                  draft-huque-dnsop-multi-alg-rules-08
+                  draft-ietf-dnsop-multi-alg-rules-00
 
 Abstract
 
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 1]
+Huque, et al.              Expires 4 May 2027                   [Page 1]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    Internet-Drafts are draft documents valid for a maximum of six months
@@ -63,7 +63,7 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 January 2027.
+   This Internet-Draft will expire on 4 May 2027.
 
 Copyright Notice
 
@@ -101,7 +101,7 @@ Table of Contents
      A.2.  Validator Requirements  . . . . . . . . . . . . . . . . .  14
      A.3.  Incompatible Use Cases  . . . . . . . . . . . . . . . . .  14
    Appendix B.  Change History (to be removed before publication)  .  15
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  15
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  16
 
 
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 2]
+Huque, et al.              Expires 4 May 2027                   [Page 2]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
 1.  tl;dr: Nutshell Proof of Sanity
@@ -165,9 +165,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 3]
+Huque, et al.              Expires 4 May 2027                   [Page 3]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    *  In multi-signer setups (Multi-Signer Extensions [RFC8901]
@@ -221,9 +221,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 4]
+Huque, et al.              Expires 4 May 2027                   [Page 4]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    The above issues are not just a theoretical problem.  Real situations
@@ -277,9 +277,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 5]
+Huque, et al.              Expires 4 May 2027                   [Page 5]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    For the case of a multi-signer setup with two generally supported
@@ -333,9 +333,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 6]
+Huque, et al.              Expires 4 May 2027                   [Page 6]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
       +=================+==========================================+
@@ -389,9 +389,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 7]
+Huque, et al.              Expires 4 May 2027                   [Page 7]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    1.  When the DS RRset or trust anchor set for a zone includes an
@@ -445,9 +445,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 8]
+Huque, et al.              Expires 4 May 2027                   [Page 8]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    algorithms, as well as other NEVER-UNIVERSAL algorithms (e.g.,
@@ -501,9 +501,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                 [Page 9]
+Huque, et al.              Expires 4 May 2027                   [Page 9]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
       all algorithms.  Validators not supporting the FORMERLY-UNIVERSAL
@@ -557,9 +557,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                [Page 10]
+Huque, et al.              Expires 4 May 2027                  [Page 10]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    Example: A zone using only an algorithm that is declared FORMERLY-
@@ -613,9 +613,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                [Page 11]
+Huque, et al.              Expires 4 May 2027                  [Page 11]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    Validators dropping support for FORMERLY-UNIVERSAL algorithms without
@@ -669,9 +669,9 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-Huque, et al.            Expires 6 January 2027                [Page 12]
+Huque, et al.              Expires 4 May 2027                  [Page 12]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    [RFC9904]  Hardaker, W. and W. Kumari, "DNSSEC Cryptographic
@@ -725,9 +725,9 @@ A.1.  Signing Requirements
 
 
 
-Huque, et al.            Expires 6 January 2027                [Page 13]
+Huque, et al.              Expires 4 May 2027                  [Page 13]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    Although unstated in that document, the above rule prevents this kind
@@ -781,9 +781,9 @@ A.3.  Incompatible Use Cases
 
 
 
-Huque, et al.            Expires 6 January 2027                [Page 14]
+Huque, et al.              Expires 4 May 2027                  [Page 14]
 
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
 
 
    *  The rules further collide with the conflicting goal of pre-
@@ -803,6 +803,21 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 Appendix B.  Change History (to be removed before publication)
 
+   draft-ietf-dnsop-multi-alg-rules-00
+      *  Adopted by DNSOP; republished unchanged from draft-huque-dnsop-
+         multi-alg-rules-08
+
+   draft-huque-dnsop-multi-alg-rules-08
+      *  Relax DNSKEY-presence rule in the presence of UNIVERSAL
+         algorithms
+
+      *  Reference RFC 9904 for the "Implement for DNSSEC Validation"
+         column
+
+      *  Add PQC use case
+
+      *  Editorial fixes
+
    draft-huque-dnsop-multi-alg-rules-07
       *  Add tl;dr: Nutshell Proof of Sanity
 
@@ -819,6 +834,14 @@ Appendix B.  Change History (to be removed before publication)
    draft-huque-dnsop-multi-alg-rules-06
       *  Fix IANA considerations
 
+
+
+
+Huque, et al.              Expires 4 May 2027                  [Page 15]
+
+Internet-Draft     Multiple Algorithm Rules in DNSSEC       October 2026
+
+
       *  Editorial changes (add change log, ...)
 
       *  Add overview of cases, and scenario descriptions
@@ -831,15 +854,6 @@ Authors' Addresses
    Shumon Huque
    Salesforce
    Email: shuque@gmail.com
-
-
-
-
-
-
-Huque, et al.            Expires 6 January 2027                [Page 15]
-
-Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
    Peter Thomassen
@@ -879,18 +893,4 @@ Internet-Draft     Multiple Algorithm Rules in DNSSEC          July 2026
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Huque, et al.            Expires 6 January 2027                [Page 16]
+Huque, et al.              Expires 4 May 2027                  [Page 16]

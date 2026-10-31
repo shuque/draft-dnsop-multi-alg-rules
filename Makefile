@@ -1,5 +1,5 @@
 SOURCE  = \
-        draft-huque-dnsop-multi-alg-rules
+        draft-ietf-dnsop-multi-alg-rules
 
 all:	$(SOURCE).txt $(SOURCE).html
 

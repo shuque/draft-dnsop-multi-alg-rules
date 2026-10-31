@@ -30,7 +30,7 @@
 
 <rfc xmlns:xi="http://www.w3.org/2001/XInclude"
         category="std" consensus="true"
-        docName="draft-huque-dnsop-multi-alg-rules-08"
+        docName="draft-ietf-dnsop-multi-alg-rules-00"
         ipr="trust200902"
         updates="4035,6840"
         obsoletes=""
@@ -78,12 +78,12 @@
       </address>
     </author>
 
-    <date day="5" month="7" year="2026"/>
+    <date day="31" month="10" year="2026"/>
 
     <!-- Meta-data Declarations -->
 
-    <area>General</area>
-    <workgroup>Internet Engineering Task Force</workgroup>
+    <area>Operations and Management</area>
+    <workgroup>DNSOP Working Group</workgroup>
     <keyword>Internet-Draft</keyword>
     <keyword>DNS</keyword>
     <keyword>DNSSEC</keyword>
@@ -819,6 +819,21 @@
 
     <section title="Change History (to be removed before publication)">
       <dl>
+        <dt>draft-ietf-dnsop-multi-alg-rules-00</dt>
+        <dd>
+          <ul>
+            <li>Adopted by DNSOP; republished unchanged from draft-huque-dnsop-multi-alg-rules-08</li>
+          </ul>
+        </dd>
+        <dt>draft-huque-dnsop-multi-alg-rules-08</dt>
+        <dd>
+          <ul>
+            <li>Relax DNSKEY-presence rule in the presence of UNIVERSAL algorithms</li>
+            <li>Reference RFC 9904 for the "Implement for DNSSEC Validation" column</li>
+            <li>Add PQC use case</li>
+            <li>Editorial fixes</li>
+          </ul>
+        </dd>
         <dt>draft-huque-dnsop-multi-alg-rules-07</dt>
         <dd>
           <ul>
